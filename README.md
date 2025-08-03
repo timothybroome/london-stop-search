@@ -129,3 +129,7 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 ## 4 Refinement of UI
 
+## 5 Optimisation of data-set
+
+Once the needs from the dataset has been extracted and visualised, the data-set can be optimised for performance. This can be done by creating aggregated totals per month and finding all available permutations per value.
+
