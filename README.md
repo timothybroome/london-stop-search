@@ -23,6 +23,9 @@ Alternatives
 ### Component Library, visual testing: Storybook
 
 
+### Redux state management: MOBX State tree
+
+
 ## Data Breakdown
 
 ```json
@@ -63,28 +66,34 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 ### Data Heirarchy
 
-![data-hierarchy](/readme/data-hierarchy.jpg)
+![data-hierarchy](/public/readme/data-hierarchy.jpg)
 
 
 ## Implementation
 
-## Creation of main layout 
+## 1 Creation of main layout 
 
 ### broken down into components per cross-section
 ### Storybook stories for each compoenent
 
-## Function to extract entire data-set
+## 2 Function to extract entire data-set
 
-## Choose and refine visualisations per cross-section
+## 3 Choose and refine visualisations per cross-section
 
+### Data scoped title
+
+### Date Range
+![date-filter-refinement](/public/readme/date-filter-refinement.jpg)
+
+### Number of searches
 ### Age range
 ### Ethnicity
 ### Gender
 ### Outcome
 ### Location
 ### Object of search
-### Type
+### Search Type
 ### Removal of more than outer clothing
 
-## Refinement of UI
+## 4 Refinement of UI
 
