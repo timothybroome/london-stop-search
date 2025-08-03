@@ -26,6 +26,36 @@ const TestDateRangePage: React.FC = () => {
             </div>
           </div>
 
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Maximum Date Range (Available Data)
+            </h2>
+            <p className="text-gray-600">
+              Start:{" "}
+              {new Date(
+                store.appLayoutStore.maxDateRange.start!,
+              ).toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </p>
+            <p className="text-gray-600">
+              End:{" "}
+              {new Date(
+                store.appLayoutStore.maxDateRange.end!,
+              ).toLocaleDateString("en-GB", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              This defines the available data range. Selections outside this
+              range will be disabled.
+            </p>
+          </div>
+
           <div className="bg-white rounded-lg shadow-lg">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800">
@@ -46,25 +76,33 @@ const TestDateRangePage: React.FC = () => {
               How to test:
             </h3>
             <ul className="list-disc list-inside text-blue-800 space-y-2">
-              <li>Click &quot;All time&quot; to clear the date range</li>
               <li>
-                Click a year (2023, 2024, 2025) to select that entire year
+                Click &quot;All time&quot; to set the full available data range
+                (maxDateRange)
+              </li>
+              <li>
+                Click a year to select that entire year (only years within
+                maxDateRange are available)
               </li>
               <li>
                 When a year is selected, click a month to select that month
-                within the year
+                within the year (unavailable months are grayed out)
               </li>
               <li>
                 When a month is selected, click a day to select that specific
-                day
+                day (unavailable days are grayed out)
               </li>
               <li>
                 Click a selected period again to deselect it and go back to the
                 parent level
               </li>
               <li>
-                Watch the &quot;Current Date Range&quot; section above update as
-                you make selections
+                Watch both date range sections above update as you make
+                selections
+              </li>
+              <li>
+                Notice how selections outside the maximum date range are
+                disabled
               </li>
             </ul>
           </div>

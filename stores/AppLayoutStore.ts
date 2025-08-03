@@ -13,6 +13,10 @@ export const AppLayoutStore = types
       start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
       end: new Date().toISOString(),
     }),
+    maxDateRange: types.optional(DateRange, {
+      start: new Date(2022, 5, 1).toISOString(),
+      end: new Date(2025, 4, 31).toISOString(),
+    })
   })
   .views((self) => ({
     get formattedDateRange() {
