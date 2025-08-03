@@ -7,25 +7,29 @@ export const DateRange = types.model("DateRange", {
 
 export type DateRangeType = Instance<typeof DateRange>;
 
+const DEFAULT_MAX_START = new Date(2022, 5, 1).toISOString(); // June 1, 2022
+const DEFAULT_MAX_END = new Date(2025, 4, 31).toISOString(); // May 31, 2025
+
 export const AppLayoutStore = types
   .model("AppLayoutStore", {
     dateRange: types.optional(DateRange, {
-      start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-      end: new Date().toISOString(),
+      start: DEFAULT_MAX_START,
+      end: DEFAULT_MAX_END,
     }),
     maxDateRange: types.optional(DateRange, {
-      start: new Date(2022, 5, 1).toISOString(),
-      end: new Date(2025, 4, 31).toISOString(),
-    })
+      start: DEFAULT_MAX_START,
+      end: DEFAULT_MAX_END,
+    }),
   })
   .views((self) => ({
     get formattedDateRange() {
-      if (!self.dateRange?.start || !self.dateRange?.end) return 'All Available Data';
-      
-      const start = new Date(self.dateRange.start).toLocaleDateString('en-GB', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+      if (!self.dateRange?.start || !self.dateRange?.end)
+        return "All Available Data";
+
+      const start = new Date(self.dateRange.start).toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       });
       
       const end = new Date(self.dateRange.end).toLocaleDateString('en-GB', {

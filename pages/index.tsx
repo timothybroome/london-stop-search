@@ -1,10 +1,9 @@
-import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DataScopedTitle } from "@/components/DataScopedTitle";
+import { DateRangeExplorer } from "@/components/DateRangeExplorer";
 import { observer } from "mobx-react";
 import { RootStoreType } from "@/stores/RootStore";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import DateRangeExplorer from "@/components/DateRangeExplorer";
+import { GetServerSideProps } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,10 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 type HomeProps = {
-  initialData: RootStoreType;
+  initialData?: Partial<RootStoreType>;
 };
 
-const Home = observer(({ initialData }: HomeProps) => {
+const Home = observer(() => {
   return (
     <div
       className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
@@ -62,13 +61,8 @@ const Home = observer(({ initialData }: HomeProps) => {
   );
 });
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async (context: GetServerSidePropsContext) => {
-  const initialData = {
-    dateRange: {
-      start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-      end: new Date().toISOString(),
-    }
-  };
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  const initialData = {};
 
   return {
     props: {

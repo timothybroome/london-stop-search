@@ -6,26 +6,20 @@ import { useEffect, useMemo, useState } from "react";
 
 interface MyAppProps extends AppProps {
   pageProps: {
-    initialData?: any;
+    initialData?: Partial<RootStoreType>;
   };
 }
 
 function App({ Component, pageProps }: MyAppProps) {
   const store = useMemo<RootStoreType>(() => {
-    return createStore({
-      dateRange: {
-        start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-        end: new Date().toISOString(),
-        ...pageProps.initialData?.dateRange,
-      },
-    });
+    return createStore(pageProps.initialData || {});
   }, [pageProps.initialData]);
-  
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
-  
+
   if (!mounted) return null;
 
   return (
