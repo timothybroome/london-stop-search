@@ -69,6 +69,38 @@ Looking at the data I would like to create a tool that allows freeform explorati
 ![data-hierarchy](/public/readme/data-hierarchy.jpg)
 
 
+### Main Layout
+
+```html
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+      
+        <div className="flex flex-col gap-[32px]">
+          <h1 className="text-4xl font-bold">Metropolitan Police Service - Stop and Search</h1>
+        </div>
+
+        <DataScopedTitle></DataScopedTitle>
+
+        <DateRangeExplorer></DateRangeExplorer>
+
+        <Filters></Filters>
+
+        <div className="grid grid-cols-2 gap-[32px]">
+
+          <NumberOfSearches></NumberOfSearches>
+          <AgeRange></AgeRange>
+          <Ethnicity></Ethnicity>
+          <Gender></Gender>
+          <Outcome></Outcome>
+          <Location></Location>
+          <ObjectOfSearch></ObjectOfSearch>
+          <SearchType></SearchType>
+          <RemovalOfMoreThanOuterClothing></RemovalOfMoreThanOuterClothing>
+
+        </div>
+
+      </main>
+```
+
 ## Implementation
 
 ## 1 Creation of main layout 
