@@ -1,0 +1,208 @@
+import fs from "fs";
+import path from "path";
+import { isWithinInterval, parseISO } from "date-fns";
+
+export interface OutcomeObject {
+  id: string;
+  name: string;
+}
+
+export interface Street {
+  id: number;
+  name: string;
+}
+
+export interface Location {
+  latitude: string;
+  street: Street;
+  longitude: string;
+}
+
+export interface StopSearchRecord {
+  age_range: string | null;
+  outcome: string | null;
+  involved_person: boolean | null;
+  self_defined_ethnicity: string | null;
+  gender: string | null;
+  legislation: string | null;
+  outcome_linked_to_object_of_search: boolean | null;
+  datetime: string;
+  removal_of_more_than_outer_clothing: boolean | null;
+  outcome_object: OutcomeObject | null;
+  location: Location | null;
+  operation: boolean | null;
+  officer_defined_ethnicity: string | null;
+  type: string | null;
+  operation_name: string | null;
+  object_of_search: string | null;
+}
+
+const dataCache = new Map<string, StopSearchRecord[]>();
+
+const getDataPath = () => {
+  return path.join(process.cwd(), "data");
+};
+
+export const getAvailableDataFiles = (): string[] => {
+  const dataPath = getDataPath();
+
+  if (!fs.existsSync(dataPath)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(dataPath)
+    .filter((file) => file.endsWith(".json"))
+    .map((file) => file.replace(".json", ""))
+    .sort();
+};
+
+export const loadDataFile = async (
+  fileName: string,
+): Promise<StopSearchRecord[]> => {
+  if (dataCache.has(fileName)) {
+    return dataCache.get(fileName)!;
+  }
+
+  const filePath = path.join(getDataPath(), `${fileName}.json`);
+
+  if (!fs.existsSync(filePath)) {
+    console.warn(`Data file not found: ${fileName}.json`);
+    return [];
+  }
+
+  try {
+    const fileContent = fs.readFileSync(filePath, "utf-8");
+    const data: StopSearchRecord[] = JSON.parse(fileContent);
+
+    dataCache.set(fileName, data);
+
+    return data;
+  } catch (error) {
+    console.error(`Error loading data file ${fileName}.json:`, error);
+    return [];
+  }
+};
+
+export const loadAllData = async (): Promise<StopSearchRecord[]> => {
+  const availableFiles = getAvailableDataFiles();
+  const allRecords: StopSearchRecord[] = [];
+
+  for (const fileName of availableFiles) {
+    const records = await loadDataFile(fileName);
+    allRecords.push(...records);
+  }
+
+  return allRecords;
+};
+
+export const getTotal = async (
+  dateStart?: string,
+  dateEnd?: string,
+  filterField?: keyof StopSearchRecord,
+  filterValue?: string,
+): Promise<number> => {
+  let filesToLoad: string[] = [];
+
+  if (dateStart && dateEnd) {
+    filesToLoad = getRelevantFiles(dateStart, dateEnd);
+  } else {
+    filesToLoad = getAvailableDataFiles();
+  }
+
+  let count = 0;
+
+  for (const fileName of filesToLoad) {
+    const records = await loadDataFile(fileName);
+
+    for (const record of records) {
+      let matches = true;
+
+      if (dateStart && dateEnd && matches) {
+        const startDate = parseISO(dateStart);
+        const endDate = parseISO(dateEnd);
+        const recordDate = parseISO(record.datetime);
+        matches = isWithinInterval(recordDate, {
+          start: startDate,
+          end: endDate,
+        });
+      }
+
+      if (filterField && filterValue !== undefined && matches) {
+        const fieldValue = record[filterField];
+
+        if (fieldValue === null || fieldValue === undefined) {
+          matches = filterValue === "null" || filterValue === "";
+        } else if (typeof fieldValue === "boolean") {
+          matches = fieldValue.toString() === filterValue;
+        } else if (typeof fieldValue === "object" && fieldValue !== null) {
+          matches = JSON.stringify(fieldValue).includes(filterValue);
+        } else {
+          matches = fieldValue
+            .toString()
+            .toLowerCase()
+            .includes(filterValue.toLowerCase());
+        }
+      }
+
+      if (matches) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+};
+
+const getRelevantFiles = (dateStart: string, dateEnd: string): string[] => {
+  const startDate = parseISO(dateStart);
+  const endDate = parseISO(dateEnd);
+  const availableFiles = getAvailableDataFiles();
+
+  return availableFiles.filter((fileName) => {
+    const [year, month] = fileName.split("-").map(Number);
+    if (!year || !month) return false;
+
+    const fileStartDate = new Date(year, month - 1, 1);
+    const fileEndDate = new Date(year, month, 0, 23, 59, 59);
+
+    return (
+      isWithinInterval(fileStartDate, { start: startDate, end: endDate }) ||
+      isWithinInterval(fileEndDate, { start: startDate, end: endDate }) ||
+      (fileStartDate <= startDate && fileEndDate >= endDate)
+    );
+  });
+};
+
+export const getRecordsByMonth = async (): Promise<Record<string, number>> => {
+  const availableFiles = getAvailableDataFiles();
+  const monthCounts: Record<string, number> = {};
+
+  for (const fileName of availableFiles) {
+    const records = await loadDataFile(fileName);
+
+    records.forEach((record) => {
+      const date = parseISO(record.datetime);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
+    });
+  }
+
+  return monthCounts;
+};
+
+export const getTotalRecords = async (): Promise<number> => {
+  const availableFiles = getAvailableDataFiles();
+  let total = 0;
+
+  for (const fileName of availableFiles) {
+    const records = await loadDataFile(fileName);
+    total += records.length;
+  }
+
+  return total;
+};
+
+export const clearCache = (): void => {
+  dataCache.clear();
+};

@@ -110,12 +110,17 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 ## 2 Function to extract entire data-set
 
-## 3 Choose and refine visualisations per cross-section
+## 3 Create and refine visualisations per cross-section
 
-### Data scoped title
+### Data scoped title ✅
 
-### Date Range
+### Date Range ✅
+
+#### Design
 ![date-filter-refinement](/public/readme/date-filter-refinement.jpg)
+
+#### Implementation
+<video controls src="/public/readme/date-explorer-complete.mov" width="100%"></video>
 
 ### Number of searches
 ### Age range
