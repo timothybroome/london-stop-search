@@ -6,8 +6,8 @@ interface DataScopedTitleProps {
 }
 
 export const DataScopedTitle = observer(({ className = '' }: DataScopedTitleProps) => {
-  const rootStore = useRootStore();
-  const { appLayoutStore } = rootStore;
+  const store = useRootStore();
+  const formattedDateRange = store.appLayoutStore.formattedDateRange;
   
   return (
     <div className={`${className} w-full`}>
@@ -15,7 +15,7 @@ export const DataScopedTitle = observer(({ className = '' }: DataScopedTitleProp
         Stop and Search Data
       </h2>
       <p className="text-gray-600 text-sm mt-1">
-        Showing data from: <span className="font-medium">{appLayoutStore.formattedDateRange}</span>
+        Showing data from: <span className="font-medium">{formattedDateRange}</span>
       </p>
     </div>
   );

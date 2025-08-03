@@ -10,7 +10,7 @@ export type DateRangeType = Instance<typeof DateRange>;
 export const AppLayoutStore = types
   .model("AppLayoutStore", {
     dateRange: types.optional(DateRange, {
-      start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // Default to last 30 days
+      start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
       end: new Date().toISOString(),
     }),
   })
@@ -38,4 +38,4 @@ export const AppLayoutStore = types
     },
   }));
 
-export type AppLayoutStore = Instance<typeof AppLayoutStore>;
+export type AppLayoutStoreType = Instance<typeof AppLayoutStore>;

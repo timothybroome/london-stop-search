@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DataScopedTitle } from "@/components/DataScopedTitle";
 import { observer } from "mobx-react";
-import { initializeStore, RootStoreType } from "@/stores";
+import { RootStoreType } from "@/stores/RootStore";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 const geistSans = Geist({
@@ -60,17 +60,19 @@ const Home = observer(({ initialData }: HomeProps) => {
   );
 });
 
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (context: GetServerSidePropsContext) => {
+  const initialData = {
+    dateRange: {
+      start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      end: new Date().toISOString(),
+    }
+  };
 
-  const store = initializeStore();
-
-  // Start with an empty jobs array.
   return {
-      props: {
-          initialData: store,
-      },
+    props: {
+      initialData,
+    },
   };
 };
-
 
 export default Home;
