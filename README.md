@@ -133,3 +133,7 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 Once the needs from the dataset has been extracted and visualised, the data-set can be optimised for performance. This can be done by creating aggregated totals per month and finding all available permutations per value.
 
+## 6 Make use of SSR
+
+The dataset os >300mb; a small proportion of which is rendered to the frontend. NextJS and Vercels Serverside rendering capablity shoud be used to only return the data to be rendered to the client
+
