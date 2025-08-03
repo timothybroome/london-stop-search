@@ -4,6 +4,7 @@ import { DataScopedTitle } from "@/components/DataScopedTitle";
 import { observer } from "mobx-react";
 import { RootStoreType } from "@/stores/RootStore";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import DateRangeExplorer from "@/components/DateRangeExplorer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +31,12 @@ const Home = observer(({ initialData }: HomeProps) => {
           <h1 className="text-4xl font-bold">Metropolitan Police Service - Stop and Search</h1>
         </div>
 
-        <DataScopedTitle className="w-full max-w-4xl" />
-
-        {/* <DateRangeExplorer></DateRangeExplorer>
-
-        <Filters></Filters> */}
+        <div className="hidden sm:grid sm:grid-cols-[max-content_2fr] sm:gap-16">
+          <DataScopedTitle />
+          <DateRangeExplorer className="max-w-[630px]" />
+        </div>
+        
+        {/* <Filters></Filters> */}
 
         <div className="grid grid-cols-2 gap-[32px]">
 

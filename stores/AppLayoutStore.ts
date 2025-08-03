@@ -21,11 +21,13 @@ export const AppLayoutStore = types
       const start = new Date(self.dateRange.start).toLocaleDateString('en-GB', {
         year: 'numeric',
         month: 'short',
+        day: 'numeric',
       });
       
       const end = new Date(self.dateRange.end).toLocaleDateString('en-GB', {
         year: 'numeric',
         month: 'short',
+        day: 'numeric',
       });
       
       return `${start} - ${end}`;

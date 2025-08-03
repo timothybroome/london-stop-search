@@ -12,11 +12,8 @@ export const DataScopedTitle = observer(({ className = '' }: DataScopedTitleProp
   return (
     <div className={`${className} w-full`}>
       <h2 className="text-2xl font-semibold text-gray-800">
-        Stop and Search Data
+        Stop and Search Data {formattedDateRange}
       </h2>
-      <p className="text-gray-600 text-sm mt-1">
-        Showing data from: <span className="font-medium">{formattedDateRange}</span>
-      </p>
     </div>
   );
 });
