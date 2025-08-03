@@ -61,6 +61,10 @@ Alternatives
 
 Looking at the data I would like to create a tool that allows freeform exploration of the data. The data is naturaly sequenced chronolically and has multiple cross-sections to explore. Therefore in terms of information heirarchy; I'd thave the time-range in view at the top; along with controls to move in or out of the time-range as well as move side to side. Then each cross-section should be broken down as cells with appropriate visualisations. Clicking into these should futher focus the visualisation as a filter to the dataset.
 
+### Data Heirarchy
+
+![data-hierarchy](/readme/data-hierarchy.jpg)
+
 
 ## Implementation
 
@@ -82,6 +86,5 @@ Looking at the data I would like to create a tool that allows freeform explorati
 ### Type
 ### Removal of more than outer clothing
 
-
-
+## Refinement of UI
 
