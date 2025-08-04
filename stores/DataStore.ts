@@ -1,4 +1,4 @@
-import { types, Instance, flow } from "mobx-state-tree";
+import { types, Instance, flow, getRoot } from "mobx-state-tree";
 
 export interface AgeRangeData {
   [ageRange: string]: number;
@@ -81,7 +81,7 @@ export const DataStore = types
       self.setError(null);
 
       try {
-        const response = yield fetch("/api/data/stats");
+        const response = yield fetch("/api/data/stats", { cache: 'no-store' });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -120,11 +120,16 @@ export const DataStore = types
         const params = new URLSearchParams();
 
         if (dateStart) params.append("dateStart", dateStart);
+        const filters = getRoot<any>(self).appLayoutStore.activeFilters();
+        for (const field in filters) {
+          const arr = filters[field] as string[];
+          if (arr.length) params.append(`filters[${field}]`, arr.join(','));
+        }
         if (dateEnd) params.append("dateEnd", dateEnd);
         if (filterField) params.append("filterField", filterField);
         if (filterValue) params.append("filterValue", filterValue);
 
-        const response = yield fetch(`/api/data/total?${params.toString()}`);
+        const response = yield fetch(`/api/data/total?${params.toString()}`, { cache: 'no-store' });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -148,9 +153,14 @@ export const DataStore = types
         
         const params = new URLSearchParams();
         if (startDate) params.append("dateStart", startDate);
+        const filters = getRoot<any>(self).appLayoutStore.activeFilters();
+        for (const key in filters) {
+          const vals = filters[key] as string[];
+          if (vals.length) params.append(`filters[${key}]`, vals.join(','));
+        }
         if (endDate) params.append("dateEnd", endDate);
         
-        const response = yield fetch(`/api/data/age-ranges?${params.toString()}`);
+        const response = yield fetch(`/api/data/age-ranges?${params.toString()}`, { cache: 'no-store' });
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -177,9 +187,14 @@ export const DataStore = types
 
         const params = new URLSearchParams();
         if (startDate) params.append("dateStart", startDate);
+        const filters = getRoot<any>(self).appLayoutStore.activeFilters();
+        for (const key in filters) {
+          const vals = filters[key] as string[];
+          if (vals.length) params.append(`filters[${key}]`, vals.join(','));
+        }
         if (endDate) params.append("dateEnd", endDate);
 
-        const response = yield fetch(`/api/data/borough-totals?${params.toString()}`);
+        const response = yield fetch(`/api/data/borough-totals?${params.toString()}`, { cache: 'no-store' });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -204,8 +219,13 @@ export const DataStore = types
         self.setError(null);
         const params = new URLSearchParams();
         if (startDate) params.append('dateStart', startDate);
+        const filters = getRoot<any>(self).appLayoutStore.activeFilters();
+        for (const field in filters) {
+          const arr = filters[field] as string[];
+          if (arr.length) params.append(`filters[${field}]`, arr.join(','));
+        }
         if (endDate) params.append('dateEnd', endDate);
-        const response = yield fetch(`/api/data/ethnicity-totals?${params.toString()}`);
+        const response = yield fetch(`/api/data/ethnicity-totals?${params.toString()}`, { cache: 'no-store' });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

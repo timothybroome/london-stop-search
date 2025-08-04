@@ -47,6 +47,9 @@ export const AppLayoutStore = types
       const obj: Record<string, string[]> = {};
       self.filters.forEach((arr, key) => { if (arr.length) obj[key] = arr.slice(); });
       return obj;
+    },
+    filtersKey() {
+      return JSON.stringify(this.activeFilters());
     }
   }))
   .actions((self) => ({

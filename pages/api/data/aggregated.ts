@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { loadAllData } from "../../../lib/dataUtils";
+import { loadAllData, parseFilters, FilterMap } from "../../../lib/dataUtils";
 import { parseISO, format, startOfYear, endOfYear, startOfMonth, endOfMonth, startOfDay, endOfDay, isWithinInterval, isSameYear, isSameMonth, isSameDay } from "date-fns";
 
 export default async function handler(
@@ -23,10 +23,18 @@ export default async function handler(
     // Load all data
     const allRecords = await loadAllData();
 
-    // Filter records within the date range
+    // Apply date and additional filters
+    const filters = parseFilters(req.query);
+    const filterKeys = Object.keys(filters);
     const filteredRecords = allRecords.filter(record => {
       const recordDate = parseISO(record.datetime);
-      return isWithinInterval(recordDate, { start: startDate, end: endDate });
+      if (!isWithinInterval(recordDate, { start: startDate, end: endDate })) return false;
+      for (const key of filterKeys) {
+        const allowed = (filters as FilterMap)[key];
+        const val = String((record as any)[key] ?? '');
+        if (allowed && !allowed.includes(val)) return false;
+      }
+      return true;
     });
 
     // Determine aggregation level based on date range

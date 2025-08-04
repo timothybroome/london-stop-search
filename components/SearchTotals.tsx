@@ -53,14 +53,15 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
         setError(null);
 
         try {
-          const params = new URLSearchParams({
-            dateStart: appLayoutStore.dateRange.start,
-            dateEnd: appLayoutStore.dateRange.end,
+          const params = new URLSearchParams();
+          params.append('dateStart', appLayoutStore.dateRange.start);
+          params.append('dateEnd', appLayoutStore.dateRange.end);
+          const filters = appLayoutStore.activeFilters();
+          Object.entries(filters).forEach(([field, arr]) => {
+            if (arr.length) params.append(`filters[${field}]`, arr.join(','));
           });
 
-          const response = await fetch(
-            `/api/data/aggregated?${params.toString()}`,
-          );
+          const response = await fetch(`/api/data/aggregated?${params.toString()}`, { cache: 'no-store' });
 
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -77,7 +78,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       };
 
       fetchData();
-    }, [appLayoutStore.dateRange.start, appLayoutStore.dateRange.end]);
+    }, [appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey()]);
 
     // Handle mounting
     useEffect(() => {

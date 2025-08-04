@@ -43,7 +43,7 @@ const EthnicityPieChart = observer(() => {
   // refetch when date range changes
   useEffect(() => {
     dataStore.fetchEthnicityTotals(dateRange.start, dateRange.end);
-  }, [dataStore, dateRange.start, dateRange.end]);
+  }, [dataStore, dateRange.start, dateRange.end, appLayoutStore.filtersKey()]);
 
   // draw chart whenever data or width changes
   useEffect(() => {

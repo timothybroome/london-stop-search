@@ -42,6 +42,7 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
     }, [
       appLayoutStore.dateRange.start,
       appLayoutStore.dateRange.end,
+      appLayoutStore.filtersKey(),
       dataStore.isInitialized,
       dataStore,
     ]);

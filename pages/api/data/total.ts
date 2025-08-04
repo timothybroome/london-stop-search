@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getTotal, StopSearchRecord } from "../../../lib/dataUtils";
+import { getTotal, StopSearchRecord, parseFilters } from "../../../lib/dataUtils";
 import fs from 'fs';
 import path from 'path';
 
@@ -25,6 +25,8 @@ export default async function handler(
 
   try {
     const { dateStart, dateEnd, filterField, filterValue } = req.query;
+    const filters = parseFilters(req.query);
+    const hasCross = Object.keys(filters).length > 0;
 
     const startDate = typeof dateStart === "string" ? dateStart : undefined;
     const endDate = typeof dateEnd === "string" ? dateEnd : undefined;
@@ -35,7 +37,7 @@ export default async function handler(
     const value = typeof filterValue === "string" ? filterValue : undefined;
 
     let total: number;
-    if (!field && !value) {
+    if (!field && !value && !hasCross) {
       // use aggregated file for speed
       const daily = loadDaily() as Record<string, number>;
       if (!startDate && !endDate) {
@@ -48,7 +50,7 @@ export default async function handler(
         }, 0);
       }
     } else {
-      total = await getTotal(startDate, endDate, field, value);
+      total = await getTotal(startDate, endDate, field, value, filters);
     }
 
     res.status(200).json({
@@ -57,6 +59,7 @@ export default async function handler(
       dateEnd: endDate,
       filterField: field,
       filterValue: value,
+      filters,
     });
   } catch (error) {
     console.error("Error in /api/data/total:", error);

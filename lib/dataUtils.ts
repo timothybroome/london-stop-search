@@ -96,11 +96,37 @@ export const loadAllData = async (): Promise<StopSearchRecord[]> => {
   return allRecords;
 };
 
+export type FilterMap = Record<string, string[]>;
+
+// Helper to derive borough name from a record. Data street names are prefixed with the borough followed by ' - '.
+export const recordBorough = (rec: StopSearchRecord): string => {
+  return rec.location?.street?.name?.split(' - ')[0] ?? '';
+};
+export const parseFilters = (query: any): FilterMap => {
+  const out: FilterMap = {};
+  const qFilters = query?.filters as Record<string, string> | undefined;
+  // Parse nested object style e.g. filters[ethnicity]=Asian via Next default parsing
+  for (const [key, value] of Object.entries(query)) {
+    if (key.startsWith('filters[') && key.endsWith(']')) {
+      const field = key.slice(8, -1); // extract text inside brackets
+      if (typeof value === 'string' && value.length)
+        out[field] = value.split(',').map((s) => s.trim());
+    }
+  }
+
+  if (!qFilters) return out;
+  Object.entries(qFilters).forEach(([field, csv]) => {
+    if (typeof csv === 'string' && csv.length) out[field] = csv.split(',').map(s=>s.trim());
+  });
+  return out;
+};
+
 export const getTotal = async (
   dateStart?: string,
   dateEnd?: string,
   filterField?: keyof StopSearchRecord,
   filterValue?: string,
+  filters: FilterMap = {},
 ): Promise<number> => {
   let filesToLoad: string[] = [];
 
@@ -142,6 +168,19 @@ export const getTotal = async (
             .toString()
             .toLowerCase()
             .includes(filterValue.toLowerCase());
+        }
+      }
+
+      if (matches) {
+        // cross filters
+        for (const [field, allowedList] of Object.entries(filters)) {
+          const allowed = allowedList as string[];
+          const val = (record as any)[field];
+          const strVal = val === undefined || val === null ? '' : String(val);
+          if (!allowed.includes(strVal)) {
+            matches = false;
+            break;
+          }
         }
       }
 

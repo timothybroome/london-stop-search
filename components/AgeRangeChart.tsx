@@ -73,7 +73,7 @@ const AgeRangeChart = observer(() => {
       }
     };
     fetchData();
-  }, [dateRange.start, dateRange.end, dataStore, isMounted]);
+  }, [dateRange.start, dateRange.end, appLayoutStore.filtersKey(), dataStore, isMounted]);
 
   // Update chart when data or container width changes
   useEffect(() => {

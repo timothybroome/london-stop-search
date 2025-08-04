@@ -30,7 +30,7 @@ const Home = observer(() => {
   useEffect(() => {
     const { start, end } = appLayoutStore.dateRange || {};
     dataStore.fetchBoroughTotals(start, end);
-  }, [dataStore, appLayoutStore.dateRange.start, appLayoutStore.dateRange.end]);
+  }, [dataStore, appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey()]);
   return (
     <div
       className={`${geistSans.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
