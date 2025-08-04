@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { isWithinInterval, parseISO } from "date-fns";
+import { isWithinInterval, parseISO, isAfter, isBefore } from "date-fns";
 
 export interface OutcomeObject {
   id: string;
@@ -205,4 +205,42 @@ export const getTotalRecords = async (): Promise<number> => {
 
 export const clearCache = (): void => {
   dataCache.clear();
+};
+
+export interface AgeRangeData {
+  [ageRange: string]: number;
+}
+
+export const getAgeRangeData = async (
+  dateStart?: string,
+  dateEnd?: string
+): Promise<AgeRangeData> => {
+  const allData = await loadAllData();
+  const ageRangeData: AgeRangeData = {};
+  
+  // Convert date strings to Date objects for comparison
+  const startDate = dateStart ? parseISO(dateStart) : null;
+  const endDate = dateEnd ? parseISO(dateEnd) : null;
+
+  allData.forEach(record => {
+    // Skip if record has no age range
+    if (!record.age_range) return;
+    
+    // Skip if date is outside the specified range
+    if (startDate || endDate) {
+      const recordDate = parseISO(record.datetime);
+      if (startDate && isBefore(recordDate, startDate)) return;
+      if (endDate && isAfter(recordDate, endDate)) return;
+    }
+    
+    // Initialize age range count if it doesn't exist
+    if (!ageRangeData[record.age_range]) {
+      ageRangeData[record.age_range] = 0;
+    }
+    
+    // Increment count for this age range
+    ageRangeData[record.age_range]++;
+  });
+
+  return ageRangeData;
 };

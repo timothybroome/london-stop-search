@@ -1,4 +1,8 @@
 import { types, Instance, flow } from "mobx-state-tree";
+
+export interface AgeRangeData {
+  [ageRange: string]: number;
+}
 export interface StopSearchRecord {
   age_range: string | null;
   outcome: string | null;
@@ -36,6 +40,7 @@ export const DataStore = types
     error: types.maybeNull(types.string),
     totalRecords: types.optional(types.number, 0),
     recordsByMonth: types.optional(types.map(types.number), {}),
+    ageRangeData: types.optional(types.frozen<AgeRangeData>(), {}),
   })
   .actions((self) => ({
     setLoading(loading: boolean) {
@@ -49,6 +54,9 @@ export const DataStore = types
     },
     setTotalRecords(total: number) {
       self.totalRecords = total;
+    },
+    setAgeRangeData(data: AgeRangeData) {
+      self.ageRangeData = data;
     },
     setRecordsByMonth(records: Record<string, number>) {
       self.recordsByMonth.clear();
@@ -122,6 +130,35 @@ export const DataStore = types
           error instanceof Error ? error.message : "Failed to get total",
         );
         return 0;
+      }
+    }),
+    
+    fetchAgeRangeData: flow(function* (startDate?: string, endDate?: string) {
+      try {
+        self.setLoading(true);
+        self.setError(null);
+        
+        const params = new URLSearchParams();
+        if (startDate) params.append("dateStart", startDate);
+        if (endDate) params.append("dateEnd", endDate);
+        
+        const response = yield fetch(`/api/data/age-ranges?${params.toString()}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = yield response.json();
+        self.setAgeRangeData(data.data);
+        return data.data;
+      } catch (error) {
+        console.error("Error fetching age range data:", error);
+        self.setError(
+          error instanceof Error ? error.message : "Failed to fetch age range data"
+        );
+        return null;
+      } finally {
+        self.setLoading(false);
       }
     }),
   }));
