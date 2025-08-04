@@ -1,5 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getTotal, StopSearchRecord } from "../../../lib/dataUtils";
+import fs from 'fs';
+import path from 'path';
+
+let dailyCache: Record<string, number> | undefined;
+function loadDaily() {
+  if (dailyCache) return dailyCache;
+  const file = path.join(process.cwd(), 'data-aggregation', 'total', 'daily-totals.json');
+  if (!fs.existsSync(file)) {
+    dailyCache = {};
+    return dailyCache;
+  }
+  dailyCache = JSON.parse(fs.readFileSync(file, 'utf8'));
+  return dailyCache;
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +34,22 @@ export default async function handler(
         : undefined;
     const value = typeof filterValue === "string" ? filterValue : undefined;
 
-    const total = await getTotal(startDate, endDate, field, value);
+    let total: number;
+    if (!field && !value) {
+      // use aggregated file for speed
+      const daily = loadDaily() as Record<string, number>;
+      if (!startDate && !endDate) {
+        total = Object.values(daily).reduce((a, b) => a + b, 0);
+      } else {
+        total = Object.entries(daily).reduce((sum, [date, cnt]) => {
+          if (startDate && date < startDate) return sum;
+          if (endDate && date > endDate) return sum;
+          return sum + cnt;
+        }, 0);
+      }
+    } else {
+      total = await getTotal(startDate, endDate, field, value);
+    }
 
     res.status(200).json({
       total,
