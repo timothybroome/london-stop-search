@@ -2,6 +2,7 @@ import { Geist } from "next/font/google";
 import { DataScopedTitle } from "@/components/DataScopedTitle";
 import { DateRangeExplorer } from "@/components/DateRangeExplorer";
 import { TotalDisplay } from "@/components/TotalDisplay";
+import { SearchTotals } from "@/components/SearchTotals";
 
 import { observer } from "mobx-react";
 import { RootStoreType } from "@/stores/RootStore";
@@ -35,9 +36,12 @@ const Home = observer(() => {
 
         {/* <Filters></Filters> */}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[32px]">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-[32px]">
           <TotalDisplay />
+          <SearchTotals />
+        </div>
 
+        <div className="grid grid-cols-1 gap-[32px]">
           {/*
           <AgeRange></AgeRange>
           <Ethnicity></Ethnicity>

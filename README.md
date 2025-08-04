@@ -120,9 +120,9 @@ Looking at the data I would like to create a tool that allows freeform explorati
 ![date-filter-refinement](/public/readme/date-filter-refinement.jpg)
 
 #### Implementation
-<video controls src="/public/readme/date-explorer-complete.mov" width="100%"></video>
+<!-- <video controls src="/public/readme/date-explorer-complete.mov" width="100%"></video> -->
 
-### Number of searches
+### Number of searches ✅
 ### Age range
 ### Ethnicity
 ### Gender
