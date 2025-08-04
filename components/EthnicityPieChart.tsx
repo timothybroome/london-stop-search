@@ -17,7 +17,7 @@ const margin = 20;
 const height = 400;
 
 const EthnicityPieChart = observer(() => {
-  const { dataStore, appLayoutStore } = useRootStore();
+  const { appLayoutStore, dataStore } = useRootStore();
   const { dateRange } = appLayoutStore;
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -96,6 +96,9 @@ const EthnicityPieChart = observer(() => {
       .append('path')
       .attr('d', arcGen as any)
       .attr('fill', d => color(d.data.eth))
+      .on('click', (_, d) => {
+        appLayoutStore.addFilter('officer_defined_ethnicity', d.data.eth);
+      })
       .on('mouseover', (event, d) => {
         const percent = ((d.data.count / total) * 100).toFixed(1);
         tooltip.html(`${d.data.eth}: ${d.data.count.toLocaleString()} (${percent}%)`).style('visibility', 'visible');

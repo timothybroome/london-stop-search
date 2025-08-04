@@ -1,6 +1,7 @@
 import { Geist } from "next/font/google";
 import { DataScopedTitle } from "@/components/DataScopedTitle";
 import { DateRangeExplorer } from "@/components/DateRangeExplorer";
+import Filters from "@/components/Filters";
 import { TotalDisplay } from "@/components/TotalDisplay";
 import { SearchTotals } from "@/components/SearchTotals";
 import AgeRangeChart from "@/components/AgeRangeChart";
@@ -46,7 +47,7 @@ const Home = observer(() => {
           <DateRangeExplorer className="max-w-[630px]" />
         </div>
 
-        {/* <Filters></Filters> */}
+        <Filters />
 
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-[32px]">
           <TotalDisplay />

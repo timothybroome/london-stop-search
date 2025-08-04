@@ -20,6 +20,7 @@ export const AppLayoutStore = types
       start: DEFAULT_MAX_START,
       end: DEFAULT_MAX_END,
     }),
+    filters: types.optional(types.map(types.array(types.string)), {}),
   })
   .views((self) => ({
     get formattedDateRange() {
@@ -41,10 +42,30 @@ export const AppLayoutStore = types
       return `${start} - ${end}`;
     },
   }))
+  .views(self => ({
+    activeFilters() {
+      const obj: Record<string, string[]> = {};
+      self.filters.forEach((arr, key) => { if (arr.length) obj[key] = arr.slice(); });
+      return obj;
+    }
+  }))
   .actions((self) => ({
     setDateRange(range: { start?: string; end?: string }) {
       if (range.start) self.dateRange.start = range.start;
       if (range.end) self.dateRange.end = range.end;
+    },
+    addFilter(field: string, value: string) {
+      const list = Array.from(self.filters.get(field) ?? []) as string[];
+      if (!list.includes(value)) self.filters.set(field, [...list, value]);
+    },
+    removeFilter(field: string, value: string) {
+      const list = Array.from(self.filters.get(field) ?? []) as string[];
+      const next = list.filter(v => v !== value);
+      self.filters.set(field, next);
+    },
+    clearFilters(field?: string) {
+      if (field) self.filters.set(field, []);
+      else self.filters.clear();
     },
   }));
 

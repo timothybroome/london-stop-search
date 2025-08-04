@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
-import { useEffect, useRef, useState, useCallback } from 'react';
-import * as d3 from 'd3';
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useRootStore } from '@/stores';
+import * as d3 from 'd3';
 
 declare global {
   interface Window {
@@ -168,7 +168,10 @@ const AgeRangeChart = observer(() => {
           .style("left", `${event.pageX + 10}px`)
           .style("top", `${event.pageY - 10}px`);
       })
-      .on("mouseout", function() {
+      .on("click", (_, d) => {
+         appLayoutStore.addFilter('age_range', d.ageRange);
+       })
+       .on("mouseout", function() {
         d3.select(this).attr("opacity", 1);
         tooltip.style("visibility", "hidden");
       });
