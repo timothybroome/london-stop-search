@@ -35,11 +35,14 @@ export interface StopSearchRecord {
   type: string | null;
   operation_name: string | null;
   object_of_search: string | null;
+  borough: string | null;
 }
 
 const dataCache = new Map<string, StopSearchRecord[]>();
 
 const getDataPath = () => {
+  const enriched = path.join(process.cwd(), "data-enriched");
+  if (fs.existsSync(enriched)) return enriched;
   return path.join(process.cwd(), "data");
 };
 
@@ -100,8 +103,11 @@ export type FilterMap = Record<string, string[]>;
 
 // Helper to derive borough name from a record. Data street names are prefixed with the borough followed by ' - '.
 export const recordBorough = (rec: StopSearchRecord): string => {
+  const fromField = (rec as any).borough as string | undefined;
+  if (fromField && fromField.length) return fromField;
   return rec.location?.street?.name?.split(' - ')[0] ?? '';
 };
+
 export const parseFilters = (query: any): FilterMap => {
   const out: FilterMap = {};
   const qFilters = query?.filters as Record<string, string> | undefined;
