@@ -42,6 +42,7 @@ export const DataStore = types
     recordsByMonth: types.optional(types.map(types.number), {}),
     ageRangeData: types.optional(types.frozen<AgeRangeData>(), {}),
     boroughTotals: types.optional(types.frozen<Record<string, number>>(), {}),
+    ethnicityTotals: types.optional(types.frozen<Record<string, number>>(), {}),
   })
   .actions((self) => ({
     setLoading(loading: boolean) {
@@ -61,6 +62,9 @@ export const DataStore = types
     },
     setBoroughTotals(data: Record<string, number>) {
       self.boroughTotals = data;
+    },
+    setEthnicityTotals(data: Record<string, number>) {
+      self.ethnicityTotals = data;
     },
     setRecordsByMonth(records: Record<string, number>) {
       self.recordsByMonth.clear();
@@ -181,7 +185,6 @@ export const DataStore = types
         }
 
         const data = yield response.json();
-        // expected shape: { totals: { Camden: 123, Hackney: 456, ... } }
         self.setBoroughTotals(data.totals);
         return data.totals as Record<string, number>;
       } catch (error) {
@@ -189,6 +192,29 @@ export const DataStore = types
         self.setError(
           error instanceof Error ? error.message : "Failed to fetch borough totals",
         );
+        return null;
+      } finally {
+        self.setLoading(false);
+      }
+    }),
+
+    fetchEthnicityTotals: flow(function* (startDate?: string, endDate?: string) {
+      try {
+        self.setLoading(true);
+        self.setError(null);
+        const params = new URLSearchParams();
+        if (startDate) params.append('dateStart', startDate);
+        if (endDate) params.append('dateEnd', endDate);
+        const response = yield fetch(`/api/data/ethnicity-totals?${params.toString()}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = yield response.json();
+        self.setEthnicityTotals(data.totals);
+        return data.totals as Record<string, number>;
+      } catch (error) {
+        console.error('Error fetching ethnicity totals:', error);
+        self.setError(error instanceof Error ? error.message : 'Failed to fetch ethnicity totals');
         return null;
       } finally {
         self.setLoading(false);
