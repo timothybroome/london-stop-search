@@ -7,6 +7,8 @@ import 'leaflet/dist/leaflet.css';
 const MapContainer: any = dynamic(() => import('react-leaflet').then(m => m.MapContainer as any), { ssr: false });
 const TileLayer: any = dynamic(() => import('react-leaflet').then(m => m.TileLayer as any), { ssr: false });
 const GeoJSONLayer: any = dynamic(() => import('react-leaflet').then(m => m.GeoJSON as any), { ssr: false });
+// leaflet types only used client-side
+import type { Path, LeafletMouseEvent } from 'leaflet';
 
 interface Props {
   height?: number;
@@ -32,6 +34,9 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
     return d3.scaleSequential(d3.interpolateReds).domain([0, max]);
   }, [values]);
 
+  // force GeoJSON layer re-mount when values change so tooltips refresh
+  const layerKey = useMemo(() => JSON.stringify(values), [values]);
+
   if (typeof window === 'undefined') return null; // Don’t render during SSR
 
   return (
@@ -44,7 +49,7 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {geo && (
-          <GeoJSONLayer
+          <GeoJSONLayer key={layerKey}
             data={geo}
             style={(feature: any) => {
               const name: string = feature?.properties?.name || '';
@@ -55,6 +60,20 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
                 weight: 1,
                 color: '#333',
               };
+            }}
+            onEachFeature={(feature: any, layer: Path) => {
+              const name: string = feature?.properties?.name || '';
+              const v = values[name] || 0;
+              layer.bindTooltip(`${name}: ${v.toLocaleString()}`);
+
+              // simple hover highlight
+              const defaultStyle = layer.options as any;
+              layer.on('mouseover', (e: LeafletMouseEvent) => {
+                layer.setStyle({ weight: 2, color: '#000' });
+              });
+              layer.on('mouseout', () => {
+                layer.setStyle({ weight: 1, color: '#333' });
+              });
             }}
           />
         )}

@@ -41,6 +41,7 @@ export const DataStore = types
     totalRecords: types.optional(types.number, 0),
     recordsByMonth: types.optional(types.map(types.number), {}),
     ageRangeData: types.optional(types.frozen<AgeRangeData>(), {}),
+    boroughTotals: types.optional(types.frozen<Record<string, number>>(), {}),
   })
   .actions((self) => ({
     setLoading(loading: boolean) {
@@ -57,6 +58,9 @@ export const DataStore = types
     },
     setAgeRangeData(data: AgeRangeData) {
       self.ageRangeData = data;
+    },
+    setBoroughTotals(data: Record<string, number>) {
+      self.boroughTotals = data;
     },
     setRecordsByMonth(records: Record<string, number>) {
       self.recordsByMonth.clear();
@@ -155,6 +159,35 @@ export const DataStore = types
         console.error("Error fetching age range data:", error);
         self.setError(
           error instanceof Error ? error.message : "Failed to fetch age range data"
+        );
+        return null;
+      } finally {
+        self.setLoading(false);
+      }
+    }),
+
+    fetchBoroughTotals: flow(function* (startDate?: string, endDate?: string) {
+      try {
+        self.setLoading(true);
+        self.setError(null);
+
+        const params = new URLSearchParams();
+        if (startDate) params.append("dateStart", startDate);
+        if (endDate) params.append("dateEnd", endDate);
+
+        const response = yield fetch(`/api/data/borough-totals?${params.toString()}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = yield response.json();
+        // expected shape: { totals: { Camden: 123, Hackney: 456, ... } }
+        self.setBoroughTotals(data.totals);
+        return data.totals as Record<string, number>;
+      } catch (error) {
+        console.error("Error fetching borough totals:", error);
+        self.setError(
+          error instanceof Error ? error.message : "Failed to fetch borough totals",
         );
         return null;
       } finally {

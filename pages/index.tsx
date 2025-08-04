@@ -5,6 +5,8 @@ import { TotalDisplay } from "@/components/TotalDisplay";
 import { SearchTotals } from "@/components/SearchTotals";
 import AgeRangeChart from "@/components/AgeRangeChart";
 import LocationMap from "@/components/LocationMap";
+import { useEffect } from "react";
+import { useRootStore } from "@/stores";
 
 import { observer } from "mobx-react";
 import { RootStoreType } from "@/stores/RootStore";
@@ -20,6 +22,12 @@ type HomeProps = {
 };
 
 const Home = observer(() => {
+  const { dataStore } = useRootStore();
+
+  // fetch borough totals once (or when date range controls implement values)
+  useEffect(() => {
+    dataStore.fetchBoroughTotals();
+  }, [dataStore]);
   return (
     <div
       className={`${geistSans.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
@@ -42,7 +50,7 @@ const Home = observer(() => {
           <TotalDisplay />
           <SearchTotals />
           <AgeRangeChart />
-          <LocationMap />
+          <LocationMap values={dataStore.boroughTotals} />
         </div>
 
         <div className="grid grid-cols-1 gap-[32px]">
