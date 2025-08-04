@@ -39,6 +39,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         totals[borough] = (totals[borough] || 0) + 1;
       });
+      if (Object.keys(totals).length === 0) {
+        const daily = loadDaily();
+        Object.values(daily).forEach((boroughObj: Record<string, number>) => {
+          Object.entries(boroughObj).forEach(([borough, count]) => {
+            totals[borough] = (totals[borough] || 0) + (count as number);
+          });
+        });
+      }
     } else {
       const daily = loadDaily();
       Object.entries(daily as Record<string, Record<string, number>>).forEach(([date, boroughObj]) => {
