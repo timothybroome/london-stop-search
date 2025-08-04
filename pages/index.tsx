@@ -4,6 +4,7 @@ import { DateRangeExplorer } from "@/components/DateRangeExplorer";
 import { TotalDisplay } from "@/components/TotalDisplay";
 import { SearchTotals } from "@/components/SearchTotals";
 import AgeRangeChart from "@/components/AgeRangeChart";
+import LocationMap from "@/components/LocationMap";
 
 import { observer } from "mobx-react";
 import { RootStoreType } from "@/stores/RootStore";
@@ -41,6 +42,7 @@ const Home = observer(() => {
           <TotalDisplay />
           <SearchTotals />
           <AgeRangeChart />
+          <LocationMap />
         </div>
 
         <div className="grid grid-cols-1 gap-[32px]">
@@ -49,7 +51,7 @@ const Home = observer(() => {
           <Ethnicity></Ethnicity>
           <Gender></Gender>
           <Outcome></Outcome>
-          <Location></Location>
+          <LocationMap />
           <ObjectOfSearch></ObjectOfSearch>
           <SearchType></SearchType>
           <RemovalOfMoreThanOuterClothing></RemovalOfMoreThanOuterClothing> */}

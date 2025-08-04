@@ -12,14 +12,21 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@turf/bbox": "^7.2.0",
+    "@turf/boolean-point-in-polygon": "^7.2.0",
     "@types/d3": "^7.4.3",
+    "@types/leaflet": "^1.9.20",
+    "@types/node-fetch": "^2.6.13",
     "d3": "^7.9.0",
+    "leaflet": "^1.9.4",
     "mobx": "^6.13.7",
     "mobx-react": "^9.2.0",
     "mobx-state-tree": "^7.0.2",
     "next": "15.4.5",
+    "node-fetch": "^3.3.2",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
