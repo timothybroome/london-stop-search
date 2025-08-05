@@ -163,6 +163,16 @@ const AgeRangeChart = observer(() => {
     g.selectAll(".tick line")
       .style("stroke", "var(--border-primary)");
 
+    // Define color palette for age ranges
+    const colorPalette = [
+      'var(--chart-1)', // #CDFF0C - bright lime green
+      'var(--chart-2)', // #A8DD06 - medium lime green  
+      'var(--chart-3)', // #86A305 - darker lime green
+      'var(--chart-4)', // #5572AF - medium blue
+      'var(--chart-5)', // #7094C5 - light blue
+      'var(--chart-6)'  // #B8C5D6 - lightest blue
+    ];
+
     // Add bars with hover effects
     g.selectAll(".bar")
       .data(data)
@@ -173,7 +183,7 @@ const AgeRangeChart = observer(() => {
       .attr("y", (d) => y(d.count))
       .attr("width", x.bandwidth())
       .attr("height", (d) => chartHeight - y(d.count))  
-      .attr("fill", "var(--chart-4)")
+      .attr("fill", (d, i) => colorPalette[i % colorPalette.length])
       .attr("rx", 2)
       .attr("ry", 2)
       .on("mouseover", function(event, d) {
@@ -197,15 +207,7 @@ const AgeRangeChart = observer(() => {
       });
 
     // Add X axis label
-    g.append("text")
-      .attr("class", "axis-label")
-      .attr("text-anchor", "middle")
-      .attr("x", chartWidth / 2)
-      .attr("y", chartHeight + margin.bottom - 40)  
-      .style("font-size", "14px")
-      .style("font-weight", "500")
-      .style("fill", "var(--text-secondary)")
-      .text("Age Range");
+
 
   }, [ageRangeData]);
 

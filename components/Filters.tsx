@@ -10,12 +10,12 @@ const Filters = observer(() => {
 
   return (
     <div className="flex flex-wrap gap-2 items-center">
-      <span className="font-semibold mr-2">Filters:</span>
+      <span className="font-semibold mr-2 text-[var(--text-secondary)]">Filters:</span>
       {Object.entries(filters).map(([field, vals]) =>
         vals.map((v) => (
           <button
             key={`${field}-${v}`}
-            className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm flex items-center gap-1"
+            className="px-3 py-1.5 bg-[var(--accent-primary)] text-[var(--dashboard-bg)] rounded border transition-colors text-sm flex items-center gap-1 hover:opacity-90 font-medium"
             onClick={() => appLayoutStore.removeFilter(field, v)}
           >
             {field}: {v}
@@ -24,7 +24,7 @@ const Filters = observer(() => {
         ))
       )}
       <button
-        className="ml-2 text-sm underline"
+        className="ml-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors underline"
         onClick={() => appLayoutStore.clearFilters()}
       >
         Clear All

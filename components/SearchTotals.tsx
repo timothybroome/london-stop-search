@@ -166,7 +166,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       g.append('path')
         .datum(data.data)
         .attr('fill', 'none')
-        .attr('stroke', 'var(--chart-4)')
+        .attr('stroke', 'var(--accent-primary)')
         .attr('stroke-width', 2)
         .attr('d', line);
 
@@ -178,7 +178,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
         .attr('cx', d => xScale(d.label) ?? 0)
         .attr('cy', d => yScale(d.value))
         .attr('r', 4)
-        .attr('fill', 'var(--chart-4)')
+        .attr('fill', 'var(--accent-primary)')
         .style('cursor', 'pointer')
         .on('click', (_, d) => handleBarClick(d))
         .on('mouseover', function(event, d) {
@@ -197,11 +197,11 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
             .html(`<strong>${d.label}</strong><br/>Records: ${d.value.toLocaleString()}`)
             .style('left', event.pageX + 10 + 'px')
             .style('top', event.pageY - 10 + 'px');
-          d3.select(this).attr('r', 6).attr('fill', 'var(--accent-primary)');
+          d3.select(this).attr('r', 6).attr('fill', 'var(--chart-1)');
         })
         .on('mouseout', function() {
           d3.select('.tooltip').remove();
-          d3.select(this).attr('r', 4).attr('fill', 'var(--chart-4)');
+          d3.select(this).attr('r', 4).attr('fill', 'var(--accent-primary)');
         });
 
       // X-axis
@@ -259,7 +259,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       return (
         <div className={`${className}`}>
           <div className="flex items-center justify-center h-64">
-            <div className="text-gray-500">No data available</div>
+            <div className="text-[var(--text-secondary)]">No data available</div>
           </div>
         </div>
       );
@@ -270,10 +270,10 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       return (
         <div className={`${className}`}>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600">
+            <div className="text-4xl font-bold text-[var(--accent-primary)]">
               {data.totalRecords.toLocaleString()}
             </div>
-            <div className="text-sm text-gray-500 mt-2">
+            <div className="text-sm text-[var(--text-secondary)] mt-2">
               {new Date(data.dateRange.start).toLocaleDateString("en-GB", {
                 year: "numeric",
                 month: "long",

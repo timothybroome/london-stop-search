@@ -34,43 +34,34 @@ const Home = observer(() => {
   }, [dataStore, appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey()]);
   return (
     <div
-      className={`${geistSans.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 bg-[var(--dashboard-bg)] text-[var(--text-primary)]`}
+      className={`${geistSans.className} font-sans min-h-screen bg-[var(--dashboard-bg)] text-[var(--text-primary)]`}
     >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="flex flex-col gap-[32px]">
-          <h1 className="text-4xl font-bold text-[var(--text-primary)]">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8 max-w-7xl">
+        <div className="flex flex-col gap-6 mb-8">
+          <h1 className="text-3xl lg:text-4xl font-bold text-[var(--text-primary)]">
             Metropolitan Police Service - Stop and Search
           </h1>
         </div>
 
-        <div className="hidden sm:grid sm:grid-cols-[max-content_2fr] sm:gap-16">
-          <DataScopedTitle />
-          <DateRangeExplorer className="max-w-[630px]" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="flex flex-col gap-4">
+            <DataScopedTitle />
+            <Filters />
+          </div>
+          <DateRangeExplorer />
         </div>
 
-        <Filters />
-
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-[32px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <DashboardCard title="Total Records"><TotalDisplay /></DashboardCard>
           <DashboardCard title="Search Totals"><SearchTotals /></DashboardCard>
           <DashboardCard title="Age Range"><AgeRangeChart /></DashboardCard>
           <DashboardCard title="Ethnicity"><EthnicityPieChart /></DashboardCard>
-          <DashboardCard title="By Borough"><LocationMap values={dataStore.boroughTotals} /></DashboardCard>
+          <div className="md:col-span-2">
+            <DashboardCard title="By Borough"><LocationMap values={dataStore.boroughTotals} /></DashboardCard>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-[32px]">
-          {/*
-          
-          <Gender></Gender>
-          <Outcome></Outcome>
-          <LocationMap />
-          <ObjectOfSearch></ObjectOfSearch>
-          <SearchType></SearchType>
-          <RemovalOfMoreThanOuterClothing></RemovalOfMoreThanOuterClothing> */}
-        </div>
       </main>
-
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
     </div>
   );
 });

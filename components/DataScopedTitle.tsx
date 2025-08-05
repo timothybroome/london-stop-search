@@ -11,7 +11,7 @@ export const DataScopedTitle = observer(({ className = '' }: DataScopedTitleProp
   
   return (
     <div className={`${className} w-full`}>
-      <h2 className="text-2xl font-semibold text-gray-800">
+      <h2 className="text-2xl font-semibold text-[var(--text-primary)]">
         {formattedDateRange}
       </h2>
     </div>
