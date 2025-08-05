@@ -182,6 +182,7 @@ export const getTotal = async (
         // cross filters
         for (const [field, allowedList] of Object.entries(filters)) {
           const allowed = allowedList as string[];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const val = (record as any)[field];
           const strVal = val === undefined || val === null ? '' : String(val);
           if (!allowed.includes(strVal)) {
