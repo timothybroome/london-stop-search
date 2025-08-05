@@ -2,8 +2,11 @@
 
 ## Overview
 
-<video src="https://github.com/timothybroome/london-stop-search/raw/refs/heads/main/public/overview.mp4" width="600" controls></video>
-
+<video
+  src="https://raw.githubusercontent.com/timothybroome/london-stop-search/main/public/overview.mp4"
+  controls
+  width="600">
+</video>
 
 ## Mood board inspiration
 
