@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const start = typeof dateStart === "string" ? dateStart : undefined;
     const end = typeof dateEnd === "string" ? dateEnd : undefined;
 
-    let totals: Record<string, number> = {};
+    const totals: Record<string, number> = {};
 
     if (otherKeys.length) {
       const all = await loadAllData();
@@ -34,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (allowedBorough && !allowedBorough.includes(borough)) return;
         for (const k of otherKeys) {
           const allowedArr = (filters as FilterMap)[k];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const val = String((rec as any)[k] ?? '');
           if (allowedArr && !allowedArr.includes(val)) return;
         }
@@ -41,11 +42,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       if (Object.keys(totals).length === 0) {
         const daily = loadDaily();
-        Object.values(daily).forEach((boroughObj: Record<string, number>) => {
+        if (daily) {
+          Object.values(daily).forEach((boroughObj: Record<string, number>) => {
           Object.entries(boroughObj).forEach(([borough, count]) => {
             totals[borough] = (totals[borough] || 0) + (count as number);
           });
-        });
+          });
+        }
       }
     } else {
       const daily = loadDaily();

@@ -103,11 +103,12 @@ export type FilterMap = Record<string, string[]>;
 
 // Helper to derive borough name from a record. Data street names are prefixed with the borough followed by ' - '.
 export const recordBorough = (rec: StopSearchRecord): string => {
-  const fromField = (rec as any).borough as string | undefined;
+  const fromField = rec.borough;
   if (fromField && fromField.length) return fromField;
   return rec.location?.street?.name?.split(' - ')[0] ?? '';
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const parseFilters = (query: any): FilterMap => {
   const out: FilterMap = {};
   const qFilters = query?.filters as Record<string, string> | undefined;

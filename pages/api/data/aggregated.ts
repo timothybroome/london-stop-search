@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { loadAllData, parseFilters, FilterMap } from "../../../lib/dataUtils";
-import { parseISO, format, startOfYear, endOfYear, startOfMonth, endOfMonth, startOfDay, endOfDay, isWithinInterval, isSameYear, isSameMonth, isSameDay } from "date-fns";
+import { parseISO, format, startOfYear, endOfYear, startOfMonth, endOfMonth, isWithinInterval, isSameYear, isSameMonth, isSameDay } from "date-fns";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,6 +31,7 @@ export default async function handler(
       if (!isWithinInterval(recordDate, { start: startDate, end: endDate })) return false;
       for (const key of filterKeys) {
         const allowed = (filters as FilterMap)[key];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const val = String((record as any)[key] ?? '');
         if (allowed && !allowed.includes(val)) return false;
       }

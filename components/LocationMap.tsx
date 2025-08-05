@@ -6,11 +6,10 @@ import 'leaflet/dist/leaflet.css';
 import { useRootStore } from '@/stores';
 
 // Lazy-load react-leaflet only on the client to avoid SSR issues
-const MapContainer: any = dynamic(() => import('react-leaflet').then(m => m.MapContainer as any), { ssr: false });
-const TileLayer: any = dynamic(() => import('react-leaflet').then(m => m.TileLayer as any), { ssr: false });
-const GeoJSONLayer: any = dynamic(() => import('react-leaflet').then(m => m.GeoJSON as any), { ssr: false });
+const MapContainer = dynamic(() => import('react-leaflet').then(m => m.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then(m => m.TileLayer), { ssr: false });
+const GeoJSONLayer = dynamic(() => import('react-leaflet').then(m => m.GeoJSON), { ssr: false });
 // leaflet types only used client-side
-import type { Path, LeafletMouseEvent } from 'leaflet';
 
 interface Props {
   height?: number;
@@ -22,7 +21,7 @@ const GEOJSON_URL = 'https://raw.githubusercontent.com/radoi90/housequest-data/m
 
 export default function LocationMap({ height = 500, values = {} }: Props) {
   const { appLayoutStore } = useRootStore();
-  const [geo, setGeo] = useState<any | null>(null);
+  const [geo, setGeo] = useState<GeoJSON.FeatureCollection | null>(null);
 
   useEffect(() => {
     fetch(GEOJSON_URL)
@@ -69,7 +68,7 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
           {geo && (
             <GeoJSONLayer key={layerKey}
               data={geo}
-              style={(feature: any) => {
+              style={(feature?: GeoJSON.Feature) => {
                 const name: string = feature?.properties?.name || '';
                 const v = values[name] || 0;
                 // Use darker blue for areas with no data, color scale for areas with data
@@ -82,11 +81,11 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
                   dashArray: '',
                 };
               }}
-              onEachFeature={(feature: any, layer: any) => {
+              onEachFeature={(feature: GeoJSON.Feature, layer: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                 const name: string = feature?.properties?.name || '';
                 const v = values[name] || 0;
                 layer.bindTooltip(`<strong>${name}</strong><br/>Records: ${v.toLocaleString()}`);
-                layer.on('mouseover', (e: LeafletMouseEvent) => {
+                layer.on('mouseover', () => {
                   layer.setStyle({ weight: 2, color: '#CDFF0C' }); // accent-primary for hover
                 });
                 layer.on('click', () => {

@@ -61,10 +61,10 @@ const Location = () => {
       .geoMercator()
       .fitExtent(
         [[20, 20], [width - 20, height - 20]],
-        geoData as any
+        geoData as d3.GeoPermissibleObjects
       );
 
-    const pathGenerator = d3.geoPath().projection(projection as any);
+    const pathGenerator = d3.geoPath().projection(projection);
 
     
 
@@ -91,7 +91,7 @@ const Location = () => {
       .data(geoData.features)
       .enter()
       .append('path')
-      .attr('d', pathGenerator as any)
+      .attr('d', (d) => pathGenerator(d))
       .attr('fill', '#a5b4fc')
       .attr('fill-opacity', 0.8)
       .attr('stroke', '#000000')

@@ -29,6 +29,7 @@ export default async function handler(
         if (allowedRange && !allowedRange.includes(range)) return;
         for (const k of otherKeys) {
           const arr = (filters as FilterMap)[k];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const val = String((rec as any)[k] ?? '');
           if (arr && !arr.includes(val)) return;
         }

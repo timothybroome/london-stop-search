@@ -30,10 +30,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       all.forEach((rec: StopSearchRecord) => {
         if (start && rec.datetime < start) return;
         if (end && rec.datetime > end) return;
-        if (allowedEth && !allowedEth.includes(rec.officer_defined_ethnicity)) return;
+        if (allowedEth && !allowedEth.includes(rec.officer_defined_ethnicity || '')) return;
         for (const key of otherFilterKeys) {
           const arr = (filters as FilterMap)[key];
           if (!arr) continue;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const val = (rec as any)[key];
           if (!arr.includes(String(val))) return;
         }

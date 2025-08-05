@@ -95,7 +95,7 @@ const EthnicityPieChart = observer(() => {
       .data(pieGen(data))
       .enter()
       .append('path')
-      .attr('d', arcGen as any)
+      .attr('d', (d) => arcGen(d))
       .attr('fill', d => color(d.data.eth))
       .style('cursor', 'pointer')
       .on('click', (_, d) => {
