@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Ensure full height coverage */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#__next {
+  min-height: 100vh;
+}
+
 :root {
   /* Starry Night Theme Colors */
   --background: #1E2A4A;
@@ -7,8 +18,8 @@
   
   /* Dashboard backgrounds */
   --dashboard-bg: #1E2A4A;
-  --widget-bg: #2A3B5C;
-  --widget-title-bg: #223459;
+  --widget-bg: #1F2D47;
+  --widget-title-bg: #1A2441;
   
   /* Accent colors */
   --accent-primary: #CDFF0C;

@@ -33,8 +33,13 @@ const Home = observer(() => {
     dataStore.fetchBoroughTotals(start, end);
   }, [dataStore, appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey()]);
   return (
-    <div
-      className={`${geistSans.className} font-sans min-h-screen bg-[var(--dashboard-bg)] text-[var(--text-primary)]`}
+    <div 
+      className={`${geistSans.className} font-sans text-[var(--text-primary)]`}
+      style={{
+        background: 'linear-gradient(135deg, #1A2441 0%, #0A1220 30%, #0F1829 70%, #1A2441 100%)',
+        minHeight: '100vh',
+        height: 'auto'
+      }}
     >
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8 max-w-7xl">
         <div className="flex flex-col gap-6 mb-8">
