@@ -103,14 +103,14 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 ## Implementation
 
-## 1 Creation of main layout 
+## 1 Creation of main layout ✅
 
 ### broken down into components per cross-section
 ### Storybook stories for each compoenent
 
-## 2 Function to extract entire data-set
+## 2 Function to extract entire data-set ✅
 
-## 3 Create and refine visualisations per cross-section
+## 3 Create and refine visualisations per cross-section ✅
 
 ### Data scoped title ✅
 
@@ -132,10 +132,12 @@ Looking at the data I would like to create a tool that allows freeform explorati
 ### Search Type
 ### Removal of more than outer clothing
 
-## 4 Refinement of UI
 
-## 5 Optimisation of data-set
+## 4 Optimisation of data-set 
 
 Once the needs from the dataset has been extracted and visualised, the data-set can be optimised for performance. This can be done by creating aggregated totals per month and finding all available permutations per value.
 
+## 5 Refinement of UI ✅
+
+Improve readability; presentation of data
 
