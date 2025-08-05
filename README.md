@@ -2,7 +2,7 @@
 
 ## Overview
 
-<video src="/public/overview.mp4" width="600" controls></video>
+<video src="public/overview.mp4" width="600" controls></video>
 
 
 ## Mood board inspiration
