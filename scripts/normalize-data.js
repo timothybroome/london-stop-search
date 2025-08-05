@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 
 /**
  * Script to parse data-enriched files and create normalized JSON structure
@@ -8,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
  */
 
 const DATA_ENRICHED_DIR = path.join(__dirname, '..', 'data-enriched');
-const OUTPUT_FILE = path.join(__dirname, '..', 'data-normalized.json');
+const OUTPUT_FILE = path.join(__dirname, '..', 'public', 'data-normalized.json');
 
 async function normalizeData() {
   console.log('Starting data normalization...');
@@ -87,6 +86,8 @@ async function normalizeData() {
   
   // Second pass: create normalized search records
   let totalRecords = 0;
+  let recordId = 1; // Start numeric ID counter
+  
   for (const file of files) {
     console.log(`Processing ${file} for search data...`);
     const filePath = path.join(DATA_ENRICHED_DIR, file);
@@ -101,7 +102,7 @@ async function normalizeData() {
         }
         
         const searchRecord = {
-          id: uuidv4(),
+          id: recordId++, // Use incremental numeric ID
           t: record.datetime,
           a: ageRangeMap.get(record.age_range),
           e: ethnicityMap.get(record.officer_defined_ethnicity),
