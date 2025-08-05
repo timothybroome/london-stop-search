@@ -14,8 +14,8 @@ interface AgeRangeDataPoint {
   count: number;
 }
 
-const margin = { top: 20, right: 30, bottom: 100, left: 80 };  // Increased bottom and left margins for labels
-const height = 500;  // Increased height to accommodate larger margins
+const margin = { top: 10, right: 20, bottom: 60, left: 60 };  
+const height = 500;  
 
 const AgeRangeChart = observer(() => {
   const { dataStore, appLayoutStore } = useRootStore();
@@ -152,7 +152,7 @@ const AgeRangeChart = observer(() => {
       .attr("x", (d) => x(d.ageRange) || 0)
       .attr("y", (d) => y(d.count))
       .attr("width", x.bandwidth())
-      .attr("height", (d) => chartHeight - y(d.count))  // Fixed height calculation
+      .attr("height", (d) => chartHeight - y(d.count))  
       .attr("fill", "#4f46e5")
       .attr("rx", 2)
       .attr("ry", 2)
@@ -181,24 +181,15 @@ const AgeRangeChart = observer(() => {
       .attr("class", "axis-label")
       .attr("text-anchor", "middle")
       .attr("x", chartWidth / 2)
-      .attr("y", chartHeight + margin.bottom - 40)  // Positioned higher to avoid overlap
+      .attr("y", chartHeight + margin.bottom - 40)  
       .style("font-size", "14px")
       .style("font-weight", "500")
       .text("Age Range");
 
-    // Add Y axis label
-    g.append("text")
-      .attr("class", "axis-label")
-      .attr("text-anchor", "middle")
-      .attr("transform", `rotate(-90) translate(-${chartHeight / 2}, ${margin.left - 40})`)
-      .style("font-size", "14px")
-      .style("font-weight", "500")
-      .text("Number of Stops");
   }, [ageRangeData]);
 
   return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">Stop and Search by Age Range</h2>
+    <div>
       <div ref={containerRef} className="relative w-full">
         <svg
           ref={svgRef}
