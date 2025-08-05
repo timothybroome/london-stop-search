@@ -45,9 +45,12 @@ const EthnicityPieChart = observer(() => {
     dataStore.fetchEthnicityTotals(dateRange.start, dateRange.end);
   }, [dataStore, dateRange.start, dateRange.end, appLayoutStore.filtersKey()]);
 
+  // Prepare data from store
+  const dataObj = dataStore.ethnicityTotals as Record<string, number>;
+  const data = Object.entries(dataObj).map(([eth, count]) => ({ eth, count }));
+
   // draw chart whenever data or width changes
   useEffect(() => {
-    const dataObj = dataStore.ethnicityTotals as Record<string, number>;
     if (!svgRef.current || !width || Object.keys(dataObj).length === 0) return;
 
     const radius = Math.min(width, height) / 2 - margin;
@@ -61,8 +64,6 @@ const EthnicityPieChart = observer(() => {
     const g = svg
       .append('g')
       .attr('transform', `translate(${width / 2},${height / 2})`);
-
-    const data = Object.entries(dataObj).map(([eth, count]) => ({ eth, count }));
     const total = d3.sum(data, d => d.count);
 
     const dynamicKeys = data.filter(d => !(d.eth in ETHNICITY_COLOR_MAP)).map(d=>d.eth);
@@ -108,17 +109,56 @@ const EthnicityPieChart = observer(() => {
       })
       .on('mouseout', () => tooltip.style('visibility', 'hidden'));
 
-    // legend
-    const legend = svg.append('g').attr('transform', `translate(${margin},${margin})`);
-    const legendItems = legend.selectAll('g').data(data).enter().append('g').attr('transform', (_, i) => `translate(0,${i * 20})`);
-    legendItems.append('rect').attr('width', 12).attr('height', 12).attr('fill', d => color(d.eth));
-    legendItems.append('text').attr('x', 18).attr('y', 10).attr('fill', 'var(--text-primary)').text(d => d.eth);
+
   }, [dataStore.ethnicityTotals, width]);
 
+  // Prepare data for the table, sorted by count descending
+  const tableData = data
+    .map((d: { eth: string; count: number }) => ({
+      ethnicity: d.eth,
+      count: d.count,
+      color: ETHNICITY_COLOR_MAP[d.eth] || '#B8C5D6'
+    }))
+    .sort((a: { count: number }, b: { count: number }) => b.count - a.count);
+
   return (
-    <div ref={containerRef} className="w-full">
-      <svg ref={svgRef} />
-      <div ref={tooltipRef} />
+    <div className="space-y-4">
+      <div ref={containerRef} className="w-full">
+        <svg ref={svgRef} />
+        <div ref={tooltipRef} />
+      </div>
+      
+      {/* Compact Data Table */}
+      <div className="w-fit max-w-full">
+        <div className="max-h-48 overflow-y-auto">
+          <table className="text-xs">
+            <tbody>
+              {tableData.map(({ ethnicity, count, color }) => (
+                <tr key={ethnicity} className="hover:bg-[var(--dashboard-bg)] hover:bg-opacity-50 transition-colors">
+                  <td className="pr-3 py-1">
+                    <div 
+                      className="w-3 h-3 rounded-full" 
+                      style={{ backgroundColor: color }}
+                    />
+                  </td>
+                  <td className="pr-6 py-1">
+                    <button 
+                      className="text-[var(--text-primary)] text-left hover:text-[var(--accent-primary)] transition-colors whitespace-nowrap"
+                      onClick={() => appLayoutStore.addFilter('officer_defined_ethnicity', ethnicity)}
+                      title={`Filter by ${ethnicity}`}
+                    >
+                      {ethnicity}
+                    </button>
+                  </td>
+                  <td className="text-[var(--text-primary)] text-right font-mono py-1">
+                    {count.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 });
