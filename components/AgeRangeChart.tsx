@@ -18,14 +18,14 @@ const margin = { top: 10, right: 20, bottom: 60, left: 60 };
 const height = 500;  
 
 const AgeRangeChart = observer(() => {
-  const { dataStore, appLayoutStore } = useRootStore();
+  const { appLayoutStore } = useRootStore();
   const { dateRange } = appLayoutStore;
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
-  const ageRangeData = dataStore.ageRangeData as Record<string, number>;
+  const ageRangeData = appLayoutStore.ageRangeTotals;
   const chartHeight = height - margin.top - margin.bottom;
   const [chartWidth, setChartWidth] = useState(0);
 
@@ -51,29 +51,21 @@ const AgeRangeChart = observer(() => {
     
     window.addEventListener('resize', debouncedResize);
     
-    // Initial data fetch
+    // Initial data load
     if (!isMounted) {
       setIsMounted(true);
-      dataStore.fetchAgeRangeData(dateRange.start, dateRange.end);
+      if (!appLayoutStore.isDataLoaded && !appLayoutStore.isLoading) {
+        appLayoutStore.loadData();
+      }
     }
     
     return () => {
       window.removeEventListener('resize', debouncedResize);
     };
-  }, [handleResize, isMounted, dateRange.start, dateRange.end, dataStore]);
+  }, [handleResize, isMounted, appLayoutStore]);
   
-  // Fetch data when date range changes
-  useEffect(() => {
-    if (!isMounted) return;
-    const fetchData = async () => {
-      try {
-        await dataStore.fetchAgeRangeData(dateRange.start, dateRange.end);
-      } catch (error) {
-        console.error('Error fetching age range data:', error);
-      }
-    };
-    fetchData();
-  }, [dateRange.start, dateRange.end, appLayoutStore.filtersKey(), dataStore, isMounted]);
+  // Data is automatically filtered by AppLayoutStore based on date range and filters
+  // No need for separate data fetching - the computed views handle this
 
   // Update chart when data or container width changes
   useEffect(() => {
@@ -227,7 +219,7 @@ const AgeRangeChart = observer(() => {
           className="block"
           style={{ minHeight: height }}
         >
-          {dataStore.isLoading && (
+          {appLayoutStore.isLoading && (
             <text
               x="50%"
               y={height / 2}

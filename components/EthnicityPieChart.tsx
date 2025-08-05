@@ -17,8 +17,7 @@ const margin = 20;
 const height = 400;
 
 const EthnicityPieChart = observer(() => {
-  const { appLayoutStore, dataStore } = useRootStore();
-  const { dateRange } = appLayoutStore;
+  const { appLayoutStore } = useRootStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -29,24 +28,20 @@ const EthnicityPieChart = observer(() => {
     setWidth(containerRef.current.offsetWidth);
   }, []);
 
-  // initial fetch + resize observer
+  // initial data load + resize observer
   useEffect(() => {
     if (typeof window === 'undefined') return;
     handleResize();
     window.addEventListener('resize', handleResize);
-    // initial fetch
-    dataStore.fetchEthnicityTotals(dateRange.start, dateRange.end);
+    // initial data load
+    if (!appLayoutStore.isDataLoaded && !appLayoutStore.isLoading) {
+      appLayoutStore.loadData();
+    }
     return () => window.removeEventListener('resize', handleResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appLayoutStore]);
 
-  // refetch when date range changes
-  useEffect(() => {
-    dataStore.fetchEthnicityTotals(dateRange.start, dateRange.end);
-  }, [dataStore, dateRange.start, dateRange.end, appLayoutStore.filtersKey()]);
-
-  // Prepare data from store
-  const dataObj = dataStore.ethnicityTotals as Record<string, number>;
+  // Prepare data from store - automatically filtered by AppLayoutStore
+  const dataObj = appLayoutStore.ethnicityTotals;
   const data = Object.entries(dataObj).map(([eth, count]) => ({ eth, count }));
 
   // draw chart whenever data or width changes
@@ -111,7 +106,7 @@ const EthnicityPieChart = observer(() => {
       .on('mouseout', () => tooltip.style('visibility', 'hidden'));
 
 
-  }, [dataStore.ethnicityTotals, width]);
+  }, [appLayoutStore.ethnicityTotals, width]);
 
   // Prepare data for the table, sorted by count descending
   const tableData = data

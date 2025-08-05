@@ -42,10 +42,17 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
     const [error, setError] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
 
-    // Fetch aggregated data when date range changes
+    // Load initial data if needed
     useEffect(() => {
-      const fetchData = async () => {
-        if (!appLayoutStore.dateRange.start || !appLayoutStore.dateRange.end) {
+      if (!appLayoutStore.isDataLoaded && !appLayoutStore.isLoading) {
+        appLayoutStore.loadData();
+      }
+    }, [appLayoutStore]);
+
+    // Generate aggregated data when date range changes
+    useEffect(() => {
+      const generateData = () => {
+        if (!appLayoutStore.dateRange.start || !appLayoutStore.dateRange.end || !appLayoutStore.isDataLoaded) {
           return;
         }
 
@@ -53,32 +60,72 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
         setError(null);
 
         try {
-          const params = new URLSearchParams();
-          params.append('dateStart', appLayoutStore.dateRange.start);
-          params.append('dateEnd', appLayoutStore.dateRange.end);
-          const filters = appLayoutStore.activeFilters();
-          Object.entries(filters).forEach(([field, arr]) => {
-            if (arr.length) params.append(`filters[${field}]`, arr.join(','));
+          // Use the intelligent aggregation from AppLayoutStore
+          const aggregated = appLayoutStore.aggregatedTotals;
+          
+          // Convert data to the expected format
+          const dataPoints = Object.entries(aggregated.data).map(([key, count]) => {
+            let label = key;
+            let date: string | undefined;
+            
+            switch (aggregated.aggregationType) {
+              case 'year':
+                label = key; // Already a year like "2023"
+                date = `${key}-01-01`;
+                break;
+              case 'month':
+                // Convert "2023-06" to "Jun"
+                const [year, monthNum] = key.split('-');
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                label = monthNames[parseInt(monthNum) - 1] || key;
+                date = `${key}-01`;
+                break;
+              case 'day':
+                // Convert "2023-06-15" to "15"
+                const dayParts = key.split('-');
+                label = dayParts[2] || key; // Extract day number
+                date = key;
+                break;
+              case 'total':
+                label = key; // "Total"
+                date = undefined;
+                break;
+            }
+            
+            return {
+              label,
+              value: count,
+              date
+            };
+          }).sort((a, b) => {
+            // Sort by date if available, otherwise by label
+            if (a.date && b.date) {
+              return a.date.localeCompare(b.date);
+            }
+            return a.label.localeCompare(b.label);
           });
-
-          const response = await fetch(`/api/data/aggregated?${params.toString()}`, { cache: 'no-store' });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const result: AggregatedResponse = await response.json();
+          
+          const result: AggregatedResponse = {
+            aggregationType: aggregated.aggregationType,
+            data: dataPoints,
+            totalRecords: appLayoutStore.totalRecords,
+            dateRange: {
+              start: appLayoutStore.dateRange.start || '',
+              end: appLayoutStore.dateRange.end || ''
+            }
+          };
+          
           setData(result);
         } catch (err) {
-          console.error("Error fetching aggregated data:", err);
-          setError(err instanceof Error ? err.message : "Failed to fetch data");
+          console.error("Error generating aggregated data:", err);
+          setError(err instanceof Error ? err.message : "Failed to generate data");
         } finally {
           setLoading(false);
         }
       };
 
-      fetchData();
-    }, [appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey()]);
+      generateData();
+    }, [appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey(), appLayoutStore.isDataLoaded]);
 
     // Handle mounting
     useEffect(() => {

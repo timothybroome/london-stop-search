@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { useRootStore } from "../stores";
 
@@ -10,44 +10,15 @@ interface TotalDisplayProps {
 
 export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
   ({ className = "" }) => {
-    const { appLayoutStore, dataStore } = useRootStore();
-    const [total, setTotal] = useState<number>(0);
-    const [isLoadingTotal, setIsLoadingTotal] = useState<boolean>(false);
+    const { appLayoutStore } = useRootStore();
 
     useEffect(() => {
-      if (!dataStore.isInitialized && !dataStore.isLoading) {
-        dataStore.loadStats();
+      if (!appLayoutStore.isDataLoaded && !appLayoutStore.isLoading) {
+        appLayoutStore.loadData();
       }
-    }, [dataStore]);
+    }, [appLayoutStore]);
 
-    useEffect(() => {
-      const fetchTotal = async () => {
-        if (!dataStore.isInitialized) return;
-
-        setIsLoadingTotal(true);
-        try {
-          const result = await dataStore.getTotal(
-            appLayoutStore.dateRange.start || undefined,
-            appLayoutStore.dateRange.end || undefined,
-          );
-          setTotal(result);
-        } catch (error) {
-          console.error("Error fetching total:", error);
-        } finally {
-          setIsLoadingTotal(false);
-        }
-      };
-
-      fetchTotal();
-    }, [
-      appLayoutStore.dateRange.start,
-      appLayoutStore.dateRange.end,
-      appLayoutStore.filtersKey(),
-      dataStore.isInitialized,
-      dataStore,
-    ]);
-
-    if (dataStore.isLoading || isLoadingTotal) {
+    if (appLayoutStore.isLoading) {
       return (
         <div className={`${className}`}>
           <div className="animate-pulse">
@@ -58,7 +29,7 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
       );
     }
 
-    if (dataStore.error) {
+    if (appLayoutStore.error) {
       return (
         <div
           className={`border-l-4 border-[var(--error)] ${className}`}
@@ -81,7 +52,7 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
               <h3 className="text-sm font-medium text-[var(--error)]">
                 Error loading data
               </h3>
-              <p className="text-sm text-[var(--text-secondary)] mt-1">{dataStore.error}</p>
+              <p className="text-sm text-[var(--text-secondary)] mt-1">{appLayoutStore.error}</p>
             </div>
           </div>
         </div>
@@ -91,10 +62,8 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
     return (
       <div className={`${className}`}>
         <p className="text-3xl font-bold text-[var(--text-primary)] mt-2">
-          {total.toLocaleString()}
+          {appLayoutStore.totalRecords.toLocaleString()}
         </p>
-
-
       </div>
     );
   },

@@ -25,13 +25,14 @@ type HomeProps = {
 };
 
 const Home = observer(() => {
-  const { dataStore, appLayoutStore } = useRootStore();
+  const { appLayoutStore } = useRootStore();
 
-  // fetch borough totals whenever date range changes
+  // Load data on initial render
   useEffect(() => {
-    const { start, end } = appLayoutStore.dateRange || {};
-    dataStore.fetchBoroughTotals(start, end);
-  }, [dataStore, appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey()]);
+    if (!appLayoutStore.isDataLoaded && !appLayoutStore.isLoading) {
+      appLayoutStore.loadData();
+    }
+  }, [appLayoutStore]);
   return (
     <div 
       className={`${geistSans.className} font-sans text-[var(--text-primary)]`}
@@ -62,7 +63,7 @@ const Home = observer(() => {
           <DashboardCard title="Age Range"><AgeRangeChart /></DashboardCard>
           <DashboardCard title="Ethnicity"><EthnicityPieChart /></DashboardCard>
           <div className="md:col-span-2">
-            <DashboardCard title="By Borough"><LocationMap values={dataStore.boroughTotals} /></DashboardCard>
+            <DashboardCard title="By Borough"><LocationMap values={appLayoutStore.boroughTotals} /></DashboardCard>
           </div>
         </div>
 
