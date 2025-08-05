@@ -229,7 +229,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
 
     if (loading) {
       return (
-        <div className={`p-4 bg-white rounded-lg shadow-sm ${className}`}>
+        <div className={`${className}`}>
           <div className="flex items-center justify-center h-64">
             <div className="text-gray-500">Loading chart data...</div>
           </div>
@@ -239,7 +239,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
 
     if (error) {
       return (
-        <div className={`p-4 bg-white rounded-lg shadow-sm ${className}`}>
+        <div className={`${className}`}>
           <div className="flex items-center justify-center h-64">
             <div className="text-red-500">Error: {error}</div>
           </div>
@@ -249,7 +249,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
 
     if (!data) {
       return (
-        <div className={`p-4 bg-white rounded-lg shadow-sm ${className}`}>
+        <div className={`${className}`}>
           <div className="flex items-center justify-center h-64">
             <div className="text-gray-500">No data available</div>
           </div>
@@ -260,11 +260,8 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
     // For single day, show total instead of chart
     if (data.aggregationType === "total") {
       return (
-        <div className={`p-4 bg-white rounded-lg shadow-sm ${className}`}>
+        <div className={`${className}`}>
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Total Records
-            </h3>
             <div className="text-4xl font-bold text-blue-600">
               {data.totalRecords.toLocaleString()}
             </div>
@@ -281,15 +278,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
     }
 
     return (
-      <div className={`p-3 bg-white rounded-lg shadow-sm ${className}`}>
-        <div className="mb-4">
-          <div className="text-sm text-gray-600">
-            Total Records:{" "}
-            <span className="font-semibold">
-              {data.totalRecords.toLocaleString()}
-            </span>
-          </div>
-        </div>
+      <div className={`${className}`}>
         <div className="w-full overflow-hidden">
           <svg  
             ref={svgRef}

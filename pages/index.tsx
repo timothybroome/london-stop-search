@@ -1,5 +1,6 @@
 import { Geist } from "next/font/google";
 import { DataScopedTitle } from "@/components/DataScopedTitle";
+import DashboardCard from "@/components/DashboardCard";
 import { DateRangeExplorer } from "@/components/DateRangeExplorer";
 import Filters from "@/components/Filters";
 import { TotalDisplay } from "@/components/TotalDisplay";
@@ -50,11 +51,11 @@ const Home = observer(() => {
         <Filters />
 
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-[32px]">
-          <TotalDisplay />
-          <SearchTotals />
-          <AgeRangeChart />
-          <EthnicityPieChart />
-          <LocationMap values={dataStore.boroughTotals} />
+          <DashboardCard title="Total Records"><TotalDisplay /></DashboardCard>
+          <DashboardCard title="Search Totals"><SearchTotals /></DashboardCard>
+          <DashboardCard title="Age Range"><AgeRangeChart /></DashboardCard>
+          <DashboardCard title="Ethnicity"><EthnicityPieChart /></DashboardCard>
+          <DashboardCard title="By Borough"><LocationMap values={dataStore.boroughTotals} /></DashboardCard>
         </div>
 
         <div className="grid grid-cols-1 gap-[32px]">

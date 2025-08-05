@@ -49,7 +49,7 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
 
     if (dataStore.isLoading || isLoadingTotal) {
       return (
-        <div className={`bg-white rounded-lg shadow-sm p-6 ${className}`}>
+        <div className={`${className}`}>
           <div className="animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
             <div className="h-8 bg-gray-200 rounded w-1/2"></div>
@@ -61,7 +61,7 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
     if (dataStore.error) {
       return (
         <div
-          className={`bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500 ${className}`}
+          className={`border-l-4 border-red-500 ${className}`}
         >
           <div className="flex">
             <div className="flex-shrink-0">
@@ -89,12 +89,9 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
     }
 
     return (
-      <div className={`bg-white rounded-lg shadow-sm p-6 ${className}`}>
+      <div className={`${className}`}>
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
-              Total Stop & Search Records
-            </h3>
             <p className="text-3xl font-bold text-gray-900 mt-2">
               {total.toLocaleString()}
             </p>
