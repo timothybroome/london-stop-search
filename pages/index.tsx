@@ -34,11 +34,11 @@ const Home = observer(() => {
   }, [dataStore, appLayoutStore.dateRange.start, appLayoutStore.dateRange.end, appLayoutStore.filtersKey()]);
   return (
     <div
-      className={`${geistSans.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
+      className={`${geistSans.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 bg-[var(--dashboard-bg)] text-[var(--text-primary)]`}
     >
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex flex-col gap-[32px]">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-bold text-[var(--text-primary)]">
             Metropolitan Police Service - Stop and Search
           </h1>
         </div>

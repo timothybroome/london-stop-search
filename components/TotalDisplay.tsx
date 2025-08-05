@@ -51,8 +51,8 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
       return (
         <div className={`${className}`}>
           <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-            <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-[var(--border-primary)] rounded w-1/4 mb-2"></div>
+            <div className="h-8 bg-[var(--border-primary)] rounded w-1/2"></div>
           </div>
         </div>
       );
@@ -61,12 +61,12 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
     if (dataStore.error) {
       return (
         <div
-          className={`border-l-4 border-red-500 ${className}`}
+          className={`border-l-4 border-[var(--error)] ${className}`}
         >
           <div className="flex">
             <div className="flex-shrink-0">
               <svg
-                className="h-5 w-5 text-red-400"
+                className="h-5 w-5 text-[var(--error)]"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -78,10 +78,10 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
+              <h3 className="text-sm font-medium text-[var(--error)]">
                 Error loading data
               </h3>
-              <p className="text-sm text-red-700 mt-1">{dataStore.error}</p>
+              <p className="text-sm text-[var(--text-secondary)] mt-1">{dataStore.error}</p>
             </div>
           </div>
         </div>
@@ -90,13 +90,13 @@ export const TotalDisplay: React.FC<TotalDisplayProps> = observer(
 
     return (
       <div className={`${className}`}>
-        <p className="text-3xl font-bold text-gray-900 mt-2">
+        <p className="text-3xl font-bold text-[var(--text-primary)] mt-2">
           {total.toLocaleString()}
         </p>
 
         {dataStore.isInitialized && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <div className="flex items-center text-sm text-gray-500">
+          <div className="mt-4 pt-4 border-t border-[var(--border-primary)]">
+            <div className="flex items-center text-sm text-[var(--text-secondary)]">
               <svg
                 className="w-4 h-4 mr-1"
                 fill="none"

@@ -166,7 +166,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       g.append('path')
         .datum(data.data)
         .attr('fill', 'none')
-        .attr('stroke', '#2563eb')
+        .attr('stroke', 'var(--chart-4)')
         .attr('stroke-width', 2)
         .attr('d', line);
 
@@ -178,28 +178,30 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
         .attr('cx', d => xScale(d.label) ?? 0)
         .attr('cy', d => yScale(d.value))
         .attr('r', 4)
-        .attr('fill', '#2563eb')
+        .attr('fill', 'var(--chart-4)')
         .style('cursor', 'pointer')
         .on('click', (_, d) => handleBarClick(d))
         .on('mouseover', function(event, d) {
           const tooltip = d3.select('body').append('div')
             .attr('class', 'tooltip')
             .style('position', 'absolute')
-            .style('background', 'rgba(0,0,0,0.8)')
-            .style('color', 'white')
+            .style('background', 'var(--widget-bg)')
+            .style('color', 'var(--text-primary)')
+            .style('border', '1px solid var(--border-primary)')
             .style('padding', '8px')
             .style('border-radius', '4px')
             .style('font-size', '12px')
             .style('pointer-events', 'none')
             .style('z-index', '1000')
+            .style('box-shadow', '0 4px 6px rgba(0, 0, 0, 0.3)')
             .html(`<strong>${d.label}</strong><br/>Records: ${d.value.toLocaleString()}`)
             .style('left', event.pageX + 10 + 'px')
             .style('top', event.pageY - 10 + 'px');
-          d3.select(this).attr('r', 6);
+          d3.select(this).attr('r', 6).attr('fill', 'var(--accent-primary)');
         })
         .on('mouseout', function() {
           d3.select('.tooltip').remove();
-          d3.select(this).attr('r', 4);
+          d3.select(this).attr('r', 4).attr('fill', 'var(--chart-4)');
         });
 
       // X-axis
@@ -208,7 +210,13 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
         .call(d3.axisBottom(xScale))
         .selectAll("text")
         .style("font-size", "12px")
-        .style("fill", "#374151");
+        .style("fill", "var(--text-secondary)");
+      
+      // Style axis lines and ticks
+      g.selectAll(".domain")
+        .style("stroke", "var(--border-primary)");
+      g.selectAll(".tick line")
+        .style("stroke", "var(--border-primary)");
     }, [data, mounted]);
 
     useEffect(() => {
@@ -231,7 +239,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       return (
         <div className={`${className}`}>
           <div className="flex items-center justify-center h-64">
-            <div className="text-gray-500">Loading chart data...</div>
+            <div className="text-[var(--text-secondary)]">Loading chart data...</div>
           </div>
         </div>
       );
@@ -241,7 +249,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       return (
         <div className={`${className}`}>
           <div className="flex items-center justify-center h-64">
-            <div className="text-red-500">Error: {error}</div>
+            <div className="text-[var(--error)]">Error: {error}</div>
           </div>
         </div>
       );

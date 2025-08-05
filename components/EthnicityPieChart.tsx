@@ -3,12 +3,12 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 
 const ETHNICITY_COLOR_MAP: Record<string, string> = {
-  White: '#66c2a5',
-  Black: '#fc8d62',
-  Asian: '#8da0cb',
-  Other: '#e78ac3',
-  Mixed: '#a6d854',
-  Unknown: '#ffd92f',
+  White: '#CDFF0C',    // Bright fluorescent green
+  Black: '#A8DD06',    // Medium fluorescent green
+  Asian: '#7094C5',    // Light blue
+  Other: '#5572AF',    // Medium blue
+  Mixed: '#86A305',    // Dark fluorescent green
+  Unknown: '#B8C5D6',  // Light blue-gray
 };
 const fallbackColors = d3.schemeSet2;
 import { useRootStore } from '@/stores';
@@ -112,7 +112,7 @@ const EthnicityPieChart = observer(() => {
     const legend = svg.append('g').attr('transform', `translate(${margin},${margin})`);
     const legendItems = legend.selectAll('g').data(data).enter().append('g').attr('transform', (_, i) => `translate(0,${i * 20})`);
     legendItems.append('rect').attr('width', 12).attr('height', 12).attr('fill', d => color(d.eth));
-    legendItems.append('text').attr('x', 18).attr('y', 10).text(d => d.eth);
+    legendItems.append('text').attr('x', 18).attr('y', 10).attr('fill', 'var(--text-primary)').text(d => d.eth);
   }, [dataStore.ethnicityTotals, width]);
 
   return (

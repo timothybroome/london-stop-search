@@ -300,16 +300,16 @@ export const DateRangeExplorer: React.FC<DateRangeExplorerProps> = observer(
       selectionState.type === "month" || selectionState.type === "day";
 
     return (
-      <div className={`p-6 bg-white rounded-lg shadow-sm ${className}`}>
+      <div className={`p-4 bg-[var(--widget-bg)] rounded-lg shadow-lg border border-[var(--border-primary)] ${className}`}>
         {/* Time Period Selection */}
-        <div className="mb-6">
-          <div className="flex flex-wrap gap-3 items-center">
+        <div className="mb-4">
+          <div className="flex flex-wrap gap-2 items-center">
             <button
               onClick={handleAllTimeClick}
-              className={`px-4 py-2 rounded-md border-2 transition-colors ${
+              className={`px-3 py-1.5 rounded-md border transition-colors text-sm ${
                 selectionState.type === "all-time"
-                  ? "border-pink-500 bg-pink-50 text-pink-700"
-                  : "border-gray-200 hover:border-gray-300 text-gray-700"
+                  ? "border-[var(--accent-primary)] bg-[var(--accent-primary)] text-[var(--dashboard-bg)] font-medium"
+                  : "border-[var(--border-primary)] hover:border-[var(--border-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
               All time
@@ -319,15 +319,15 @@ export const DateRangeExplorer: React.FC<DateRangeExplorerProps> = observer(
                 key={year}
                 onClick={() => handleYearClick(year)}
                 disabled={!isYearAvailable(year)}
-                className={`px-4 py-2 rounded-md border-2 transition-colors ${
+                className={`px-3 py-1.5 rounded-md border transition-colors text-sm ${
                   !isYearAvailable(year)
-                    ? "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
+                    ? "border-[var(--border-primary)] bg-[var(--widget-title-bg)] text-[var(--text-muted)] cursor-not-allowed opacity-50"
                     : (selectionState.type === "year" ||
                           selectionState.type === "month" ||
                           selectionState.type === "day") &&
                         selectionState.year! === year
-                      ? "border-pink-500 bg-pink-50 text-pink-700"
-                      : "border-gray-200 hover:border-gray-300 text-gray-700"
+                      ? "border-[var(--accent-primary)] bg-[var(--accent-primary)] text-[var(--dashboard-bg)] font-medium"
+                      : "border-[var(--border-primary)] hover:border-[var(--border-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 {year}
@@ -338,21 +338,21 @@ export const DateRangeExplorer: React.FC<DateRangeExplorerProps> = observer(
 
         {/* Month Selection */}
         {shouldShowMonths && (
-          <div className="mb-6">
-            <div className="grid grid-cols-6 gap-3">
+          <div className="mb-4">
+            <div className="grid grid-cols-6 gap-2">
               {MONTHS.map((month, index) => (
                 <button
                   key={month}
                   onClick={() => handleMonthClick(index)}
                   disabled={!isMonthAvailable(index)}
-                  className={`px-3 py-2 rounded-md border-2 transition-colors text-sm ${
+                  className={`px-2 py-1.5 rounded-md border transition-colors text-sm ${
                     !isMonthAvailable(index)
-                      ? "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
+                      ? "border-[var(--border-primary)] bg-[var(--widget-title-bg)] text-[var(--text-muted)] cursor-not-allowed opacity-50"
                       : (selectionState.type === "month" ||
                             selectionState.type === "day") &&
                           selectionState.month! === index
-                        ? "border-pink-500 bg-pink-50 text-pink-700"
-                        : "border-gray-200 hover:border-gray-300 text-gray-700"
+                        ? "border-[var(--accent-primary)] bg-[var(--accent-primary)] text-[var(--dashboard-bg)] font-medium"
+                        : "border-[var(--border-primary)] hover:border-[var(--border-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   }`}
                 >
                   {month}
@@ -365,7 +365,7 @@ export const DateRangeExplorer: React.FC<DateRangeExplorerProps> = observer(
         {/* Day Selection */}
         {shouldShowDays && (
           <div>
-            <div className="grid grid-cols-16 gap-2">
+            <div className="grid grid-cols-16 gap-1">
               {Array.from(
                 { length: getDaysForCurrentMonth() },
                 (_, i) => i + 1,
@@ -374,13 +374,13 @@ export const DateRangeExplorer: React.FC<DateRangeExplorerProps> = observer(
                   key={day}
                   onClick={() => handleDayClick(day)}
                   disabled={!isDayAvailable(day)}
-                  className={`w-8 h-8 rounded-md border-2 transition-colors text-sm flex items-center justify-center ${
+                  className={`w-7 h-7 rounded border transition-colors text-xs flex items-center justify-center ${
                     !isDayAvailable(day)
-                      ? "border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
+                      ? "border-[var(--border-primary)] bg-[var(--widget-title-bg)] text-[var(--text-muted)] cursor-not-allowed opacity-50"
                       : selectionState.type === "day" &&
                           selectionState.day! === day
-                        ? "border-pink-500 bg-pink-50 text-pink-700"
-                        : "border-gray-200 hover:border-gray-300 text-gray-700"
+                        ? "border-[var(--accent-primary)] bg-[var(--accent-primary)] text-[var(--dashboard-bg)] font-medium"
+                        : "border-[var(--border-primary)] hover:border-[var(--border-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                   }`}
                 >
                   {day}

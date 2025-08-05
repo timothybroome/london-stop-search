@@ -121,14 +121,16 @@ const AgeRangeChart = observer(() => {
     const tooltip = d3.select(tooltipRef.current)
       .style("position", "absolute")
       .style("visibility", "hidden")
-      .style("background", "rgba(0, 0, 0, 0.8)")
-      .style("color", "white")
+      .style("background", "var(--widget-bg)")
+      .style("color", "var(--text-primary)")
       .style("padding", "8px 12px")
       .style("border-radius", "4px")
+      .style("border", "1px solid var(--border-primary)")
       .style("font-size", "14px")
       .style("pointer-events", "none")
       .style("z-index", "10")
-      .style("transition", "opacity 0.2s");
+      .style("transition", "opacity 0.2s")
+      .style("box-shadow", "0 4px 6px rgba(0, 0, 0, 0.3)");
 
     // Add X axis
     g.append("g")
@@ -136,12 +138,30 @@ const AgeRangeChart = observer(() => {
       .call(d3.axisBottom(x))
       .selectAll("text")
       .style("text-anchor", "end")
+      .style("fill", "var(--text-secondary)")
+      .style("font-size", "12px")
       .attr("dx", "-.8em")
       .attr("dy", ".15em")
       .attr("transform", "rotate(-45)");
 
+    // Style X axis line and ticks
+    g.select(".domain")
+      .style("stroke", "var(--border-primary)");
+    g.selectAll(".tick line")
+      .style("stroke", "var(--border-primary)");
+
     // Add Y axis
-    g.append("g").call(d3.axisLeft(y));
+    g.append("g")
+      .call(d3.axisLeft(y))
+      .selectAll("text")
+      .style("fill", "var(--text-secondary)")
+      .style("font-size", "12px");
+
+    // Style Y axis line and ticks
+    g.selectAll(".domain")
+      .style("stroke", "var(--border-primary)");
+    g.selectAll(".tick line")
+      .style("stroke", "var(--border-primary)");
 
     // Add bars with hover effects
     g.selectAll(".bar")
@@ -153,7 +173,7 @@ const AgeRangeChart = observer(() => {
       .attr("y", (d) => y(d.count))
       .attr("width", x.bandwidth())
       .attr("height", (d) => chartHeight - y(d.count))  
-      .attr("fill", "#4f46e5")
+      .attr("fill", "var(--chart-4)")
       .attr("rx", 2)
       .attr("ry", 2)
       .on("mouseover", function(event, d) {
@@ -184,6 +204,7 @@ const AgeRangeChart = observer(() => {
       .attr("y", chartHeight + margin.bottom - 40)  
       .style("font-size", "14px")
       .style("font-weight", "500")
+      .style("fill", "var(--text-secondary)")
       .text("Age Range");
 
   }, [ageRangeData]);
@@ -203,9 +224,8 @@ const AgeRangeChart = observer(() => {
               x="50%"
               y={height / 2}
               textAnchor="middle"
-              className="text-gray-500"
               fontSize="16px"
-              fill="currentColor"
+              fill="var(--text-secondary)"
             >
               Loading...
             </text>

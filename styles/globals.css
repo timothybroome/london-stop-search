@@ -1,8 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Starry Night Theme Colors */
+  --background: #1E2A4A;
+  --foreground: #ffffff;
+  
+  /* Dashboard backgrounds */
+  --dashboard-bg: #1E2A4A;
+  --widget-bg: #2A3B5C;
+  --widget-title-bg: #223459;
+  
+  /* Accent colors */
+  --accent-primary: #CDFF0C;
+  --accent-secondary: #7094C5;
+  
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #B8C5D6;
+  --text-muted: #8A9BAE;
+  
+  /* Chart colors */
+  --chart-1: #CDFF0C;
+  --chart-2: #A8DD06;
+  --chart-3: #86A305;
+  --chart-4: #5572AF;
+  --chart-5: #7094C5;
+  --chart-6: #B8C5D6;
+  --chart-semantic-positive: #2CC990;
+  --chart-semantic-negative: #FF7979;
+  
+  /* Status colors */
+  --success: #2CC990;
+  --warning: #CDFF0C;
+  --error: #FF7979;
+  --info: #7094C5;
+  
+  /* Border colors */
+  --border-primary: #3A4B6B;
+  --border-secondary: #4A5B7B;
+  --border-accent: #CDFF0C;
 }
 
 @theme inline {
@@ -10,17 +46,24 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  
+  /* Custom Tailwind colors */
+  --color-dashboard-bg: var(--dashboard-bg);
+  --color-widget-bg: var(--widget-bg);
+  --color-widget-title-bg: var(--widget-title-bg);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border-primary: var(--border-primary);
+  --color-border-secondary: var(--border-secondary);
+  --color-border-accent: var(--border-accent);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
 }

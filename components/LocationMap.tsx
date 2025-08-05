@@ -30,10 +30,12 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
       .catch(err => console.error('Error loading GeoJSON', err));
   }, []);
 
-  // colour scale recomputed when values change
+  // colour scale recomputed when values change - using blues to fluorescent greens
   const colourScale = useMemo(() => {
     const max = Math.max(...Object.values(values), 1);
-    return d3.scaleSequential(d3.interpolateReds).domain([0, max]);
+    // Create custom color scale from dark blue to bright fluorescent green
+    const customInterpolator = d3.interpolateRgb('#2A3B5C', '#CDFF0C'); // widget-bg to accent-primary
+    return d3.scaleSequential(customInterpolator).domain([0, max]);
   }, [values]);
 
   // force GeoJSON layer re-mount when values change so tooltips refresh
@@ -49,18 +51,23 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
         zoom={10}
         scrollWheelZoom
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <TileLayer 
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        />
         {geo && (
           <GeoJSONLayer key={layerKey}
             data={geo}
             style={(feature: any) => {
               const name: string = feature?.properties?.name || '';
               const v = values[name] || 0;
+              // Use darker blue for areas with no data, color scale for areas with data
+              const fillColor = v > 0 ? colourScale(v) as string : '#1E2A4A'; // dashboard-bg for no data
               return {
-                fillColor: colourScale(v) as string,
+                fillColor,
                 fillOpacity: 0.8,
                 weight: 1,
-                color: '#333',
+                color: '#3A4B6B', // border-primary
               };
             }}
             onEachFeature={(feature: any, layer: Path) => {
@@ -71,13 +78,13 @@ export default function LocationMap({ height = 500, values = {} }: Props) {
               // simple hover highlight
               const defaultStyle = layer.options as any;
               layer.on('mouseover', (e: LeafletMouseEvent) => {
-                layer.setStyle({ weight: 2, color: '#000' });
+                layer.setStyle({ weight: 2, color: '#CDFF0C' }); // accent-primary for hover
               });
               layer.on('click', () => {
                  appLayoutStore.addFilter('borough', name);
                });
                layer.on('mouseout', () => {
-                layer.setStyle({ weight: 1, color: '#333' });
+                layer.setStyle({ weight: 1, color: '#3A4B6B' }); // border-primary
               });
             }}
           />
