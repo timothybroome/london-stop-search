@@ -142,66 +142,64 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
 
       // Scales
       const xScale = d3
-        .scaleBand()
+        .scalePoint<string>()
         .domain(data.data.map((d) => d.label))
         .range([0, width])
-        .padding(0.1);
+        .padding(0.5);
 
       const yScale = d3
-        .scaleLinear()
+        .scaleLinear<number, number>()
         .domain([0, d3.max(data.data, (d) => d.value) || 0])
         .nice()
         .range([height, 0]);
 
-      // Color scale
       const colorScale = d3
         .scaleSequential(d3.interpolateBlues)
         .domain([0, d3.max(data.data, (d) => d.value) || 0]);
 
-      // Bars
-      g.selectAll(".bar")
+      // Line path
+      const line = d3.line<AggregatedDataPoint>()
+        .x(d => (xScale(d.label) ?? 0))
+        .y(d => yScale(d.value))
+        .curve(d3.curveMonotoneX);
+
+      g.append('path')
+        .datum(data.data)
+        .attr('fill', 'none')
+        .attr('stroke', '#2563eb')
+        .attr('stroke-width', 2)
+        .attr('d', line);
+
+      // Circles
+      g.selectAll('circle')
         .data(data.data)
         .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", (d) => xScale(d.label) || 0)
-        .attr("y", (d) => yScale(d.value))
-        .attr("width", xScale.bandwidth())
-        .attr("height", (d) => height - yScale(d.value))
-        .attr("fill", (d) => colorScale(d.value))
-        .style("cursor", "pointer")
-        .on("click", (event, d) => handleBarClick(d as AggregatedDataPoint))
-        .on("mouseover", function (event, d) {
-          // Tooltip
-          const tooltip = d3
-            .select("body")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("position", "absolute")
-            .style("background", "rgba(0, 0, 0, 0.8)")
-            .style("color", "white")
-            .style("padding", "8px")
-            .style("border-radius", "4px")
-            .style("font-size", "12px")
-            .style("pointer-events", "none")
-            .style("z-index", "1000");
-
-          tooltip
-            .html(
-              `<strong>${d.label}</strong><br/>Records: ${d.value.toLocaleString()}`,
-            )
-            .style("left", event.pageX + 10 + "px")
-            .style("top", event.pageY - 10 + "px");
-
-          // Highlight bar
-          d3.select(this).style("opacity", 0.8);
+        .append('circle')
+        .attr('cx', d => xScale(d.label) ?? 0)
+        .attr('cy', d => yScale(d.value))
+        .attr('r', 4)
+        .attr('fill', '#2563eb')
+        .style('cursor', 'pointer')
+        .on('click', (_, d) => handleBarClick(d))
+        .on('mouseover', function(event, d) {
+          const tooltip = d3.select('body').append('div')
+            .attr('class', 'tooltip')
+            .style('position', 'absolute')
+            .style('background', 'rgba(0,0,0,0.8)')
+            .style('color', 'white')
+            .style('padding', '8px')
+            .style('border-radius', '4px')
+            .style('font-size', '12px')
+            .style('pointer-events', 'none')
+            .style('z-index', '1000')
+            .html(`<strong>${d.label}</strong><br/>Records: ${d.value.toLocaleString()}`)
+            .style('left', event.pageX + 10 + 'px')
+            .style('top', event.pageY - 10 + 'px');
+          d3.select(this).attr('r', 6);
         })
-        .on("mouseout", function () {
-          // Remove tooltip
-          d3.selectAll(".tooltip").remove();
-
-          // Reset bar
-          d3.select(this).style("opacity", 1);
+        .on('mouseout', function() {
+          d3.select('.tooltip').remove();
+          d3.select(this).attr('r', 4);
         });
 
       // X-axis
