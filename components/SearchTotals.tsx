@@ -129,7 +129,7 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       // Get container dimensions - use the parent container's width
       const container = svgRef.current.parentElement;
       const containerWidth = container ? container.clientWidth : 400;
-      const margin = { top: 10, right: 10, bottom: 30, left: 10 };
+      const margin = { top: 10, right: 10, bottom: 30, left: 50 };
       const width = Math.max(containerWidth - margin.left - margin.right, 200);
       const height = 250 - margin.top - margin.bottom;
 
@@ -208,6 +208,13 @@ export const SearchTotals: React.FC<SearchTotalsProps> = observer(
       g.append("g")
         .attr("transform", `translate(0,${height})`)
         .call(d3.axisBottom(xScale))
+        .selectAll("text")
+        .style("font-size", "12px")
+        .style("fill", "var(--text-secondary)");
+      
+      // Y-axis
+      g.append("g")
+        .call(d3.axisLeft(yScale))
         .selectAll("text")
         .style("font-size", "12px")
         .style("fill", "var(--text-secondary)");

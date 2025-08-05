@@ -96,13 +96,18 @@ const AgeRangeChart = observer(() => {
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
       
-    // Prepare the data
+    // Prepare the data with proper age range ordering
+    const ageRangeOrder = ['under 10', '10-17', '18-24', '25-34', 'over 34'];
     const data = Object.entries(ageRangeData)
       .map(([ageRange, count]) => ({
         ageRange,
         count: Number(count)
       }))
-      .sort((a, b) => a.ageRange.localeCompare(b.ageRange));
+      .sort((a, b) => {
+        const indexA = ageRangeOrder.indexOf(a.ageRange);
+        const indexB = ageRangeOrder.indexOf(b.ageRange);
+        return indexA - indexB;
+      });
       
     if (data.length === 0) return;
     
@@ -186,6 +191,7 @@ const AgeRangeChart = observer(() => {
       .attr("fill", (d, i) => colorPalette[i % colorPalette.length])
       .attr("rx", 2)
       .attr("ry", 2)
+      .style("cursor", "pointer")
       .on("mouseover", function(event, d) {
         d3.select(this).attr("opacity", 0.8);
         tooltip

@@ -97,6 +97,7 @@ const EthnicityPieChart = observer(() => {
       .append('path')
       .attr('d', arcGen as any)
       .attr('fill', d => color(d.data.eth))
+      .style('cursor', 'pointer')
       .on('click', (_, d) => {
         appLayoutStore.addFilter('officer_defined_ethnicity', d.data.eth);
       })

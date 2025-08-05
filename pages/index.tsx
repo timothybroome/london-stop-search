@@ -53,7 +53,7 @@ const Home = observer(() => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <DashboardCard title="Total Records"><TotalDisplay /></DashboardCard>
-          <DashboardCard title="Search Totals"><SearchTotals /></DashboardCard>
+          <DashboardCard title="Search Totals" className="p-6 pb-6"><div className="-mx-5"><SearchTotals /></div></DashboardCard>
           <DashboardCard title="Age Range"><AgeRangeChart /></DashboardCard>
           <DashboardCard title="Ethnicity"><EthnicityPieChart /></DashboardCard>
           <div className="md:col-span-2">
