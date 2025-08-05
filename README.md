@@ -2,6 +2,8 @@
 
 ## Overview
 
+[Live demo](https://london-stop-search.vercel.app/)
+
 [![Watch](public/preview.png)](https://youtu.be/XDT4HxAnqUQ)
 
 ## Mood board inspiration
