@@ -104,16 +104,16 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 ## Implementation
 
-## 1 Creation of main layout ✅
+### 1 Creation of main layout ✅
 
 ### broken down into components per cross-section
 ### Storybook stories for each compoenent
 
-## 2 Function to extract entire data-set ✅
+### 2 Function to extract entire data-set ✅
 
-## 3 Create and refine visualisations per cross-section ✅
+### 3 Create and refine visualisations per cross-section ✅
 
-### Data scoped title ✅
+#### Data scoped title ✅
 
 #### Date Range ✅
 
@@ -132,11 +132,11 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 A sub-selection of the components were created due to time-contstaints.
 
-## 4 Optimisation of data-set ✅
+### 4 Optimisation of data-set ✅
 
 Once the needs from the dataset has been established with the UI components the data can be optimised for performance. For a larger for an enterprise i'd use a database such as Postgres with indexing. For this project I wanted to keep it as self-contained and high-performance as possible. With some experimentation I found that it was possible to create an optimised datafile that reduced the data size from 350mb to 31mb and thus be used in memory on the client and also support the cross-filtering needed by the UI. This results in a very fast and responsive UI.
 
-## 5 Refinement of UI ✅
+### 5 Refinement of UI ✅
 
 Improve readability; presentation of data
 
