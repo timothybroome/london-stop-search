@@ -2,12 +2,9 @@
 
 ## Overview
 
-[Live demo](https://london-stop-search.vercel.app/)
+# [Live demo](https://london-stop-search.vercel.app/)
 
 [![Watch](public/preview.png)](https://youtu.be/XDT4HxAnqUQ)
-
-## Mood board inspiration
-
 
 ## Choice of tools
 
@@ -23,10 +20,9 @@ Allows typesafe development; alternatives: ES6
 
 A long term personal preference allows deep flexibility in presenting data visually.
 
-Alternatives
-
 ### Component Library, visual testing: Storybook
 
+Allows components to be tested and visualised in isolation.
 
 ### Redux state management: MOBX State tree
 
@@ -119,30 +115,46 @@ Looking at the data I would like to create a tool that allows freeform explorati
 
 ### Data scoped title ✅
 
-### Date Range ✅
+#### Date Range ✅
 
-#### Design
+##### Design
 ![date-filter-refinement](/public/readme/date-filter-refinement.jpg)
 
-#### Implementation
-<!-- <video controls src="/public/readme/date-explorer-complete.mov" width="100%"></video> -->
+#### Number of searches ✅
+#### Age range ✅
+#### Ethnicity ✅
+#### Gender ✅
+#### Outcome ✅
+#### Location ✅
+#### Object of search 
+#### Search Type
+#### Removal of more than outer clothing
 
-### Number of searches ✅
-### Age range ✅
-### Ethnicity ✅
-### Gender ✅
-### Outcome ✅
-### Location ✅
-### Object of search 
-### Search Type
-### Removal of more than outer clothing
+A sub-selection of the components were created due to time-contstaints.
 
+## 4 Optimisation of data-set ✅
 
-## 4 Optimisation of data-set 
-
-Once the needs from the dataset has been extracted and visualised, the data-set can be optimised for performance. This can be done by creating aggregated totals per month and finding all available permutations per value.
+Once the needs from the dataset has been established with the UI components the data can be optimised for performance. For a larger for an enterprise i'd use a database such as Postgres with indexing. For this project I wanted to keep it as self-contained and high-performance as possible. With some experimentation I found that it was possible to create an optimised datafile that reduced the data size from 350mb to 31mb and thus be used in memory on the client and also support the cross-filtering needed by the UI. This results in a very fast and responsive UI.
 
 ## 5 Refinement of UI ✅
 
 Improve readability; presentation of data
 
+
+## Deployment
+
+1. Sign up or log in to [Vercel](https://vercel.com/).
+
+2. Install the Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+
+3. Deploy the project:
+   ```bash
+   vercel
+   ```
+
+4. Follow the prompts to link the project to your Vercel account and select the appropriate settings.
+
+5. Once deployed, visit your Vercel dashboard to manage your deployment.
