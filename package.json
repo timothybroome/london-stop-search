@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "download-data": "ts-node scripts/downloadData.ts",
+    "enrich-data": "ts-node scripts/enrich-add-borough.ts",
+    "normalize-data": "node scripts/normalize-data.js",
+    "process-all-data": "node scripts/process-all-data.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

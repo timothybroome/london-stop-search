@@ -140,6 +140,44 @@ Once the needs from the dataset has been established with the UI components the 
 
 Improve readability; presentation of data
 
+## Data Processing
+
+The project includes automated scripts to download, enrich, and normalize the London Stop Search data:
+
+### Quick Start
+
+To process all data in one command:
+
+```bash
+npm run process-all-data
+```
+
+This runs the complete pipeline:
+1. **Download** - Fetches raw data from police.uk API
+2. **Enrich** - Adds borough information using geospatial lookup
+3. **Normalize** - Creates optimized data structure for client-side performance
+
+### Individual Steps
+
+You can also run each step individually:
+
+```bash
+# Step 1: Download raw data
+npm run download-data
+
+# Step 2: Enrich with borough data
+npm run enrich-data
+
+# Step 3: Normalize for performance
+npm run normalize-data
+```
+
+### Data Flow
+
+- **Raw data**: `./data/` (350MB+ JSON files from police.uk API)
+- **Enriched data**: `./data-enriched/` (with borough information added)
+- **Normalized data**: `./public/data-normalized.json` (30MB optimized file)
+
 
 ## Deployment
 
